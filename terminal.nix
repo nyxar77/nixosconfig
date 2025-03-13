@@ -1,6 +1,54 @@
 { pkgs, ... }:
 {
-  #enable tmux  
+
+  networking.wireless.iwd.enable = true;
+  environment.systemPackages = with pkgs; [
+    # ----awesome CLI tools----
+    pavucontrol
+    nh
+    nurl
+    wget
+    mtr
+    mosh
+    wireguard-ui
+    wireguard-tools
+    kitty
+    wl-clipboard
+    linux-firmware
+    linux-wifi-hotspot
+    fastfetch
+    starship
+    lazygit
+    jq
+    fzf
+    fd
+    bat
+    htop
+    ranger
+    autojump # jump over sub directories
+    # delta
+    ripgrep # recursive search, run rg
+    eza
+    pstree
+    lsof # listen open files
+
+    brightnessctl
+    tealdeer # simplify man pages and more, run tldr <cmd>
+    # --------------------------
+  ];
+  services.openssh = {
+    enable = true;
+    /*
+      extraConfig = ''
+        Host serverless
+          HostName 192.168.1.51
+          User baryon
+          IdentityFile /home/nyxar/.ssh/serverless
+      '';
+    */
+  };
+
+  #enable tmux
   programs = {
     tmux.enable = true;
     starship = {
@@ -92,26 +140,4 @@
       };
     };
   };
-  environment.systemPackages = with pkgs; [
-    # ----awesome CLI tools----
-    wl-clipboard
-    fastfetch
-    starship
-    lazygit
-    jq
-    fzf
-    fd
-    bat
-    htop
-    btop
-    ranger
-    autojump # jump over sub directories
-    # delta
-    ripgrep # recursive search, run rg
-    eza
-    pstree
-    lsof # listen open files
-    tealdeer # simplify man pages and more, run tldr <cmd>
-    # --------------------------  
-  ];
 }

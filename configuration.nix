@@ -1,19 +1,33 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  ...
+}@args:
 
 {
   imports = [
     # Include the results of the hardware scan.
     ./vm.nix
-    ./hardware-configuration.nix
     ./fonts-configuration.nix
-    ./hyprland-dependencies.nix
-    ./Terminal.nix
+    ./terminal.nix
     ./developement.nix
+    ./modules/wireguard.nix
+    ./modules/syncthing.nix
+    ./modules/fingerprint.nix
+    ./modules/hyprland.nix
+    ./modules/networking.nix
+    ./modules/desktop-manager.nix
+    ./modules/applets.nix
   ];
 
+  nixpkgs.config = {
+    packageOverrides = pkgs: {
+      unstable = import <unstable> { }; # Load the unstable package set
+    };
+  };
   # Bootloader:
   boot.loader = {
     systemd-boot.enable = true;
@@ -30,14 +44,21 @@
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  # hibernation
 
   # Enable networking
   networking.networkmanager.enable = true;
-
+  networking.hosts = {
+    "192.168.1.50" = [ "serverless" ];
+    "192.168.1.51" = [ "serverlesss" ];
+  };
   networking = {
     nameservers = [
-      "9.9.9.9"
-      "149.112.112.112"
+      "1.1.1.1"
+      /*
+        "9.9.9.9"
+        "149.112.112.112"
+      */
     ]; # Cloudflare's malware-filtering DNS
   };
 
@@ -46,17 +67,17 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-
   i18n.extraLocaleSettings = {
+
+    LC_NUMERIC = "fr_FR.UTF-8";
+    LC_TIME = "fr_FR.UTF-8";
+    LC_MONETARY = "fr_FR.UTF-8";
     LC_ADDRESS = "fr_FR.UTF-8";
     LC_IDENTIFICATION = "fr_FR.UTF-8";
     LC_MEASUREMENT = "fr_FR.UTF-8";
-    LC_MONETARY = "fr_FR.UTF-8";
-    LC_NAME = "fr_FR.UTF-8";
-    LC_NUMERIC = "fr_FR.UTF-8";
     LC_PAPER = "fr_FR.UTF-8";
     LC_TELEPHONE = "fr_FR.UTF-8";
-    LC_TIME = "fr_FR.UTF-8";
+    LC_NAME = "fr_FR.UTF-8";
   };
 
   # Enable the X11 windowing system.
@@ -83,32 +104,12 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    #jack.enable = true;
-
+    jack.enable = true;
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
 
-  # Enable fingerprint.
-  /*
-      services.fprintd = {
-        enable = true;
-        tod.enable = true;
-        tod.driver = pkgs.libfprint-2-tod1-vfs0090;
-    }
-      systemd.services.fprintd = {
-        wantedBy = [ "multi-user.target" ];
-               	serviceConfig.Type = "simple";
-      };
-  */
-  /*
-    services.fprintd = {
-      enable = true;
-      tod.enable = true;
-      tod.driver = pkgs.libfprint-2-tod1-vfs0090;
-    };
-  */
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
@@ -130,19 +131,47 @@
         "wheel"
         "docker"
         "libvirt"
+        "adbusers"
+        "plugdev"
       ];
       # packages = with pkgs; [];
     };
   };
 
   programs = {
+    ladybird.enable = true;
+    thunderbird.enable = true;
+    kdeconnect.enable = true;
     firefox.enable = true;
     steam.enable = true;
     nix-ld.enable = true;
     neovim.enable = true;
     fish.enable = true;
-    zsh.enable = true;
     xwayland.enable = true;
+  };
+
+  programs.zsh = {
+    enable = true;
+    /*
+      enableCompletion = true;
+      autosuggestions.enable = true;
+      syntaxHighlighting.enable = true;
+
+      shellAliases = {
+        ll = "ls -l";
+        edit = "sudo -e";
+        update = "sudo nixos-rebuild switch";
+      };
+
+      history.size = 10000;
+      history.ignoreAllDups = true;
+      history.path = "$HOME/.zsh_history";
+      history.ignorePatterns = [
+        "rm *"
+        "pkill *"
+        "cp *"
+      ];
+    */
   };
 
   #  programs.firefox.nativeMessagingHosts.packages = [ pkgs.uget-integrator ];
@@ -153,36 +182,36 @@
   # List packages installed in system profile. To search, run:
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    kitty
     #---- disk / partition related packages ----
     disko # format and changing fs in a declarative way
     ntfs3g
     gparted
     parted
-    gnome.gnome-disk-utility
+    gnome-disk-utility
     testdisk
     usbutils
     ventoy-full
     #--- password manager ---
     keepassxc
     # entropy daemon
-    syncthing
+    scrcpy
+    android-tools
     #-------------------
+    figma-linux
     mpv
-    git
     obs-studio
     linuxKernel.packages.linux_zen.v4l2loopback # virtual camera
     # linux-wifi-hotspot
-    ungoogled-chromium
+    brave
     # ------------------
     lan-mouse
 
     # ------------------------
+    mtr-gui
     winetricks
     wineWowPackages.waylandFull
     blender-hip
     vesktop
-    webcamoid
     discover-overlay # overlay for audio
     spotify
     obsidian
@@ -192,56 +221,78 @@
     hunspellDicts.fr-any # french - any variant
     mangohud
     goverlay
+    waydroid
     #uget # download manager
+    xonotic
+    wesnoth
+    superTuxKart
+    unstable.bolt-launcher
     (prismlauncher.override {
       jdks = [
         jdk8
         jdk17
-        jdk19
         jdk21_headless
       ];
     })
     torrential
   ];
 
-  services = {
-    /*
-      syncthing = {
-        enable = true;
+  nixpkgs.config.permittedInsecurePackages = [
+    "openssl-1.1.1w"
+  ];
+
+  /*
+    programs.mpv = {
+      enable = true;
+
+      package = (
+        pkgs.mpv-unwrapped.wrapper {
+          scripts = with pkgs.mpvScripts; [
+            uosc
+            sponsorblock
+          ];
+
+          mpv = pkgs.mpv-unwrapped.override {
+            waylandSupport = true;
+          };
+        }
+      );
+
+      config = {
+        profile = "high-quality";
+        ytdl-format = "bestvideo+bestaudio";
+        cache-default = 4000000;
       };
-    */
+    };
+  */
+
+  services = {
     mysql = {
       enable = true;
       package = pkgs.mariadb;
+      #longview.mysqlPasswordFile = "/run/keys/mysql.password";
     };
-    #longview.mysqlPasswordFile = "/run/keys/mysql.password";
+  };
+  services = {
     gvfs.enable = true; # NOTE: automount/umount
     haveged.enable = true; # enable rng (haveged) #NOTE: this is for entropy (generate randomness)
-    openssh.enable = true; # Enable the OpenSSH daemon.
-    #Enable the KDE Plasma Desktop Environment.
-    # wayland with plasma 6
-    xserver = {
-      enable = true;
-      xkb.layout = "fr,ara";
-      xkb.variant = "azerty";
-      videoDrivers = [ "amdgpu" ];
-    };
-    displayManager.sddm = {
-      enable = true;
-      autoNumlock = true;
-    };
-    desktopManager.plasma6.enable = true;
-    #-----------
+  };
+  #-----------
+  services = {
     # Enable CUPS to print documents.
     printing.enable = true;
     udev.enable = true;
     #--------
+  };
+  services = {
     # anti-virus
     clamav = {
       daemon.enable = true;
       updater.enable = true;
     };
   };
+
+  virtualisation.waydroid.enable = true;
   virtualisation.docker = {
     # enable docker
     enable = true;
@@ -250,7 +301,7 @@
       enable = true;
       setSocketVariable = true;
     };
-    #NOTE: change docker images default path
+    # change docker images default path
     /*
       daemon.settings = {
           data-root = "~/Programming/Coding/docker/images/";
@@ -258,13 +309,16 @@
     */
   };
 
-  # nix-garbage-collect every 15 days
+  # nix-garbage-collect every 5 days
   nix.gc = {
     automatic = true;
-    options = "--delete-older-than 7d";
+    options = "--delete-older-than 5d";
   };
   nix.optimise.automatic = true;
   nix.settings.auto-optimise-store = true;
+
+  system.autoUpgrade.enable = true;
+  system.autoUpgrade.dates = "weekly";
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -276,25 +330,7 @@
 
   # List services that you want to enable:
 
-  # Open ports in the firewall.
-  networking.firewall = {
-    enable = true;
-    allowedTCPPortRanges = [
-      {
-        from = 2000;
-        to = 4000;
-      }
-    ];
-    allowedUDPPortRanges = [
-      {
-        from = 2000;
-        to = 4000;
-      }
-    ];
-  };
+  system.copySystemConfiguration = true;
 
-  networking.firewall.allowedTCPPorts = [ 4242 ];
-  networking.firewall.allowedUDPPorts = [ 4242 ];
-
-  system.stateVersion = "24.051"; # Did you read the comments? no :(
+  system.stateVersion = "24.11"; # Did you read the comments? no :(
 }

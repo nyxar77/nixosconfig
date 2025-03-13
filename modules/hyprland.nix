@@ -1,7 +1,13 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
-
+    gtk3
+    gtk4
+    # ----aesthetics----
+    pipes
+    tty-clock
+    cava
+    spicetify-cli
     libnotify # dependency for dunst
     rofi-wayland
     rofi-emoji
@@ -17,12 +23,23 @@
     grim # grab images from a wayland compositor
     networkmanager_dmenu
     pinentry-qt
-    ags
+    unstable.ags
+    unstable.astal.astal4
+    unstable.astal.io
     libgtop
     upower
     matugen
     hyprpicker
-    flameshot
+    flameshot # screenshots
+
+    #--- hyprpanel dependencies ---
+    /*
+        aylurs-gtk-shell-git
+        wireplumber
+        libgtop
+        bluez
+    */
+
   ];
   /*
       # enabling tilting window manager hyperland

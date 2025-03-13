@@ -1,10 +1,6 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
-    # ----aesthetics----
-    pipes
-    tty-clock
-    cava
     # ------ developpement ------
     docker-compose
     nodejs_22
@@ -14,6 +10,7 @@
     gcc
     mysql80
     go
+    git
     python311
     php83Packages.composer
     nixfmt-rfc-style # format for the nix language
@@ -22,13 +19,11 @@
     rustc
     cargo
     nix-tree
-    brightnessctl
-    fprintd
     zip
     unzip
+    rar
     appimage-run
     steam-run
-    gtk3
     libdbusmenu-gtk3
     xdg-utils
     /*
