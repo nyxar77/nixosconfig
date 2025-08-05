@@ -1,6 +1,8 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
+    hyprland
+    greetd.greetd
     gtk3
     gtk4
     # ----aesthetics----
@@ -23,13 +25,16 @@
     grim # grab images from a wayland compositor
     networkmanager_dmenu
     pinentry-qt
-    unstable.ags
-    unstable.astal.astal4
-    unstable.astal.io
+
+    ags
+    astal.astal4
+    astal.io
+
     libgtop
     upower
     matugen
     hyprpicker
+    hyprshot
     flameshot # screenshots
 
     #--- hyprpanel dependencies ---
@@ -41,25 +46,30 @@
     */
 
   ];
+
+  # enabling tilting window manager hyperland
+
   /*
-      # enabling tilting window manager hyperland
-        programs.hyprland = {
-            enable = true;
-            xwayland.enable = true;
-        };
-        xdg.portal = {
-            enable = true;
-            extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-        };
-        services = {
-            #Dbus for power management
-            upower.enable = true;
-            # login manager daemon
-            # greetd.enable = true;
-            # media player and stuff
-            gvfs.enable = true;
-            # change mode power ("preformance", "balanced",...)
-            power-profiles-daemon.enable = true;
-        };
+    programs.hyprland = {
+      enable = true;
+      withUWSM = true;
+      xwayland.enable = true;
+    };
+    hardware.graphics.enable = true;
+    xdg.portal = {
+      enable = true;
+      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    };
+
+    services = {
+      #Dbus for power management
+      upower.enable = true;
+      # login manager daemon
+      greetd.enable = true;
+      # media player and stuff
+      gvfs.enable = true;
+      # change mode power ("preformance", "balanced",...)
+      power-profiles-daemon.enable = true;
+    };
   */
 }

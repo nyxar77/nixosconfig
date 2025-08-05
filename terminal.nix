@@ -1,6 +1,5 @@
 { pkgs, ... }:
 {
-
   networking.wireless.iwd.enable = true;
   environment.systemPackages = with pkgs; [
     # ----awesome CLI tools----
@@ -47,10 +46,55 @@
       '';
     */
   };
+  environment = {
+    shells = [
+      pkgs.zsh
+      pkgs.bash
+      pkgs.fish
+    ];
+    variables = {
+      MANPAGER = "nvim +Man!";
+      EDITOR = "nvim";
+      VISUAL = "nvim";
+    };
+  };
+
+  programs.autojump.enable = true;
+  # zsh
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestions.enable = true;
+    syntaxHighlighting.enable = true;
+
+    shellAliases = {
+      k = "kubectl";
+      hibernate = "sudo systemctl start hibernate.target";
+      nixosconfig = "cd /etc/nixos; sudo -E nvim . ; cd -";
+      nvimconfig = "cd ~/.config/nvim;nvim . ; cd -";
+      ls = "eza --icons=always --color=always -l --no-filesize";
+      ll = "eza --icons=always --color=always -la";
+      tree = "eza --tree --icons=always --color=always -l --no-filesize";
+    };
+
+    shellInit = ''
+      aj() {
+          cd "$(autojump $1)"
+      }
+    '';
+
+    histSize = 10000;
+    histFile = "$HOME/.zsh_history";
+
+  };
 
   #enable tmux
   programs = {
     tmux.enable = true;
+  };
+
+  # starship
+  programs = {
     starship = {
       enable = true;
       settings = {

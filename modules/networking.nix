@@ -8,13 +8,15 @@
     enable = true;
     allowedTCPPorts = [
       4242
-      51820
       44562
+      51413
+      51820
     ];
     allowedUDPPorts = [
       4242
-      51820
+      51413
       44562
+      51820
     ];
 
     /*

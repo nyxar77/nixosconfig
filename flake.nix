@@ -2,24 +2,33 @@
   description = "nixos system configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/24.11";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05"; # Stable
+    # unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    stylix = {
+      url = "github:nix-community/stylix/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-
   outputs =
     {
       self,
       nixpkgs,
-      nixpkgs-unstable,
-    }:
+      ...
+    }@inputs:
+    let
+      system = "x86_64-linux";
+      hostname = "nixos";
+    in
     {
-      nixosConfigurations."nixosBuild" = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+      nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
+        inherit system;
         modules = [
           ./configuration.nix
-          ./hardware-configuration.nix
+          inputs.stylix.nixosModules.stylix
         ];
-        specialArgs = { inherit nixpkgs-unstable; };
+        specialArgs = {
+          inherit (inputs) stylix;
+        };
       };
     };
 }

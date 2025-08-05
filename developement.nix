@@ -2,10 +2,16 @@
 {
   environment.systemPackages = with pkgs; [
     # ------ developpement ------
+    tree-sitter
+    gnumake
     docker-compose
-    nodejs_22
+    google-cloud-sdk
+    deno
+    bun
+    nodejs_24
     libgcc
     luarocks
+    lua5_4_compat
     lua5_1
     gcc
     mysql80

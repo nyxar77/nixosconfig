@@ -1,12 +1,12 @@
 { ... }:
 
 {
-  networking.wireguard.enable = true;
+  networking.wireguard.enable = false;
 
   # server it would communicate with
   networking.wireguard.interfaces =
     let
-      server_ip = "1";
+      server_ip = "x.x.x.x";
       hostname = "serverless-tunnel.ddns.net";
     in
     {

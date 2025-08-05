@@ -1,6 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
 {
   config,
   pkgs,
@@ -10,6 +7,7 @@
 {
   imports = [
     # Include the results of the hardware scan.
+    ./hardware-configuration.nix
     ./vm.nix
     ./fonts-configuration.nix
     ./terminal.nix
@@ -20,14 +18,12 @@
     ./modules/hyprland.nix
     ./modules/networking.nix
     ./modules/desktop-manager.nix
-    ./modules/applets.nix
+    ./modules/keyd.nix
+    ./modules/sound.nix
+    # ./modules/stylix.nix
   ];
 
-  nixpkgs.config = {
-    packageOverrides = pkgs: {
-      unstable = import <unstable> { }; # Load the unstable package set
-    };
-  };
+  stylix.enable = true;
   # Bootloader:
   boot.loader = {
     systemd-boot.enable = true;
@@ -92,23 +88,7 @@
     };
   */
   # Configure console keymap
-  console.keyMap = "fr";
-
-  # enable bluetooth
-  hardware.bluetooth.enable = true;
-  # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    jack.enable = true;
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
+  console.keyMap = "us";
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
@@ -122,7 +102,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users = {
     # Default shell
-    defaultUserShell = pkgs.fish;
+    defaultUserShell = pkgs.zsh;
     users.nyxar = {
       isNormalUser = true;
       description = "Nyxar";
@@ -147,31 +127,6 @@
     nix-ld.enable = true;
     neovim.enable = true;
     fish.enable = true;
-    xwayland.enable = true;
-  };
-
-  programs.zsh = {
-    enable = true;
-    /*
-      enableCompletion = true;
-      autosuggestions.enable = true;
-      syntaxHighlighting.enable = true;
-
-      shellAliases = {
-        ll = "ls -l";
-        edit = "sudo -e";
-        update = "sudo nixos-rebuild switch";
-      };
-
-      history.size = 10000;
-      history.ignoreAllDups = true;
-      history.path = "$HOME/.zsh_history";
-      history.ignorePatterns = [
-        "rm *"
-        "pkill *"
-        "cp *"
-      ];
-    */
   };
 
   #  programs.firefox.nativeMessagingHosts.packages = [ pkgs.uget-integrator ];
@@ -181,6 +136,7 @@
   # services.create_ap.enable = true;
   # List packages installed in system profile. To search, run:
   environment.systemPackages = with pkgs; [
+    aircrack-ng
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #---- disk / partition related packages ----
     disko # format and changing fs in a declarative way
@@ -190,7 +146,7 @@
     gnome-disk-utility
     testdisk
     usbutils
-    ventoy-full
+    metadata-cleaner
     #--- password manager ---
     keepassxc
     # entropy daemon
@@ -199,10 +155,13 @@
     #-------------------
     figma-linux
     mpv
+    ff2mpv
+    yt-dlp
     obs-studio
     linuxKernel.packages.linux_zen.v4l2loopback # virtual camera
     # linux-wifi-hotspot
     brave
+    chromium
     # ------------------
     lan-mouse
 
@@ -212,8 +171,10 @@
     wineWowPackages.waylandFull
     blender-hip
     vesktop
+    arrpc
     discover-overlay # overlay for audio
     spotify
+    librewolf
     obsidian
     libreoffice # alternative for microsoft office
     hunspell # spellchecker
@@ -226,7 +187,7 @@
     xonotic
     wesnoth
     superTuxKart
-    unstable.bolt-launcher
+    # unstable.pkgs.bolt-launcher
     (prismlauncher.override {
       jdks = [
         jdk8
@@ -234,7 +195,7 @@
         jdk21_headless
       ];
     })
-    torrential
+    qbittorrent
   ];
 
   nixpkgs.config.permittedInsecurePackages = [
@@ -275,7 +236,7 @@
   };
   services = {
     gvfs.enable = true; # NOTE: automount/umount
-    haveged.enable = true; # enable rng (haveged) #NOTE: this is for entropy (generate randomness)
+    haveged.enable = true; # NOTE: this is for entropy (generate randomness)
   };
   #-----------
   services = {
@@ -331,6 +292,6 @@
   # List services that you want to enable:
 
   system.copySystemConfiguration = true;
-
-  system.stateVersion = "24.11"; # Did you read the comments? no :(
+  hardware.enableAllFirmware = true;
+  system.stateVersion = "25.05"; # Did you read the comments? no :(
 }
