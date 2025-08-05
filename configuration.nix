@@ -23,7 +23,7 @@
     # ./modules/stylix.nix
   ];
 
-  stylix.enable = true;
+  # stylix.enable = true;
   # Bootloader:
   boot.loader = {
     systemd-boot.enable = true;
