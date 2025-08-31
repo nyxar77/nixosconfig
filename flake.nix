@@ -9,27 +9,23 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs =
-    {
-      self,
-      nixpkgs,
-      ...
-    }@inputs:
-    let
-      system = "x86_64-linux";
-      hostname = "nixos";
-    in
-    {
-      nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
-        inherit system;
-        modules = [
-          ./configuration.nix
-          ./hardware-configuration.nix
-          inputs.stylix.nixosModules.stylix
-        ];
-        specialArgs = {
-          inherit (inputs) stylix;
-        };
+  outputs = {
+    self,
+    nixpkgs,
+    ...
+  } @ inputs: let
+    system = "x86_64-linux";
+    hostname = "nixos";
+  in {
+    nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
+      inherit system;
+      modules = [
+        ./configuration.nix
+        inputs.stylix.nixosModules.stylix
+      ];
+      specialArgs = {
+        inherit (inputs) stylix;
       };
     };
+  };
 }
