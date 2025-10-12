@@ -1,12 +1,9 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     bridge-utils
     qemu_kvm
     libosinfo
     libvirt
-    virt-manager
     swtpm
     quickemu
     #        quickgui
@@ -33,5 +30,4 @@
     };
   };
   programs.virt-manager.enable = true;
-
 }

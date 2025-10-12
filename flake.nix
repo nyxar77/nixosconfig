@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05"; # Stable
-    # unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     stylix = {
       url = "github:nix-community/stylix/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -15,16 +15,40 @@
     ...
   } @ inputs: let
     system = "x86_64-linux";
-    hostname = "nixos";
-  in {
-    nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
+    pkgs = import nixpkgs {
       inherit system;
-      modules = [
-        ./configuration.nix
-        inputs.stylix.nixosModules.stylix
+      overlays = [
+        (
+          final: prev: {
+            base16-schemes = inputs.unstable.legacyPackages.${system}.base16-schemes;
+          }
+        )
       ];
-      specialArgs = {
-        inherit (inputs) stylix;
+    };
+  in {
+    nixosConfigurations = {
+      nixos = nixpkgs.lib.nixosSystem {
+        inherit pkgs;
+        modules = [
+          ./hosts/nixos
+          inputs.stylix.nixosModules.stylix
+          ./lib
+        ];
+        specialArgs = {
+          inherit (inputs) stylix;
+          hostRole = "nixos";
+        };
+      };
+
+      serverless = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./hosts/serverless
+          ./lib
+        ];
+        specialArgs = {
+          hostRole = "serverless";
+        };
       };
     };
   };
