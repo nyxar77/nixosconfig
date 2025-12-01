@@ -1,5 +1,5 @@
 {lib, ...}: {
-  nixpkgs.config.allowUnfree = true;
+  # nixpkgs.config.allowUnfree = true;
   # Allow experimental feature "flakes"
   nix.settings.experimental-features = [
     "nix-command"
@@ -19,7 +19,7 @@
     autoUpgrade.dates = lib.mkDefault "weekly";
   };
 
-  nixpkgs.config.permittedInsecurePackages = [
-    "openssl-1.1.1w"
-  ];
+  # nixpkgs.config.permittedInsecurePackages = [
+  #   "openssl-1.1.1w"
+  # ];
 }

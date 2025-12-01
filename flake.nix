@@ -2,7 +2,7 @@
   description = "nixos system configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05"; # Stable
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11"; # Stable
     unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     stylix = {
       url = "github:nix-community/stylix/release-25.05";
@@ -17,12 +17,16 @@
     system = "x86_64-linux";
     pkgs = import nixpkgs {
       inherit system;
+      config = {
+        allowUnfree = true;
+        permittedInsecurePackages = ["openssl-1.1.1w"];
+      };
       overlays = [
-        (
-          final: prev: {
-            base16-schemes = inputs.unstable.legacyPackages.${system}.base16-schemes;
-          }
-        )
+        /*
+           final: prev: {
+          base16-schemes = inputs.unstable.legacyPackages.${system}.base16-schemes;
+        }
+        */
       ];
     };
   in {

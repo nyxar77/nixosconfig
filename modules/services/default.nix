@@ -9,6 +9,7 @@
     ./virtualisation.nix
     ./vm.nix
     ./maintenance.nix
+    ./apache.nix
   ];
   /*
      ++ lib.optionals config.fingerprintSupported [

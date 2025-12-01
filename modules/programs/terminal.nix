@@ -9,7 +9,6 @@
     wl-clipboard
     linux-firmware
     linux-wifi-hotspot
-    fastfetch
     lazygit
     jq
     fzf
