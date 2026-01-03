@@ -3,53 +3,54 @@
   config,
   pkgs,
   ...
-}: {
-  config = lib.mkIf (config.desktopManagers.enable) {
-    stylix = {
-      enable = true;
-      autoEnable = true;
-      image = null;
-      polarity = "dark";
-      base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
-      /*
-         base16Scheme = let
-        base16-schemes = pkgs.base16-schemes.overrideAttrs (oldAttrs: {
-          version = "0-unstable-2025-9-25";
-          src = pkgs.fetchFromGitHub {
-            owner = "tinted-theming";
-            repo = "schemes";
-            rev = "317a5e10c35825a6c905d912e480dfe8e71c7559";
-            hash = "sha256-d4km8W7w2zCUEmPAPUoLk1NlYrGODuVa3P7St+UrqkM=";
-          };
-        });
-      in "${base16-schemes}/share/themes/hardhacker.yaml";
-      */
-      /*
-         base16Scheme = {
-        base00 = "#211e2a";
-        base01 = "#2c2737";
-        base02 = "#3f3951";
-        base03 = "#6e6780";
-        base04 = "#8a829e";
-        base05 = "#e4dee9";
-        base06 = "#f2e8f0";
-        base07 = "#ffffff";
-        base08 = "#e965a5";
-        base09 = "#f4b870";
-        base0A = "#ebde76";
-        base0B = "#b1f2a7";
-        base0C = "#b3f4f3";
-        base0D = "#95a6f4";
-        base0E = "#ff79c6";
-        base0F = "#bd93f9";
-      };
-      */
+}:
+lib.mkIf (config.desktopManagers.enable) {
+  stylix = {
+    enable = true;
+    autoEnable = true;
+    image = null;
+    polarity = "dark";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+    /*
+       base16Scheme = let
+      base16-schemes = pkgs.base16-schemes.overrideAttrs (oldAttrs: {
+        version = "0-unstable-2025-9-25";
+        src = pkgs.fetchFromGitHub {
+          owner = "tinted-theming";
+          repo = "schemes";
+          rev = "317a5e10c35825a6c905d912e480dfe8e71c7559";
+          hash = "sha256-d4km8W7w2zCUEmPAPUoLk1NlYrGODuVa3P7St+UrqkM=";
+        };
+      });
+    in "${base16-schemes}/share/themes/hardhacker.yaml";
+    */
+    /*
+       base16Scheme = {
+      base00 = "#211e2a";
+      base01 = "#2c2737";
+      base02 = "#3f3951";
+      base03 = "#6e6780";
+      base04 = "#8a829e";
+      base05 = "#e4dee9";
+      base06 = "#f2e8f0";
+      base07 = "#ffffff";
+      base08 = "#e965a5";
+      base09 = "#f4b870";
+      base0A = "#ebde76";
+      base0B = "#b1f2a7";
+      base0C = "#b3f4f3";
+      base0D = "#95a6f4";
+      base0E = "#ff79c6";
+      base0F = "#bd93f9";
     };
-
-    # stylix.fonts = {
-    #   serif = config.stylix.fonts.monospace;
-    #   sansSerif = config.stylix.fonts.monospace;
-    #   emoji = config.stylix.fonts.monospace;
-    # };
+    */
   };
+
+  /*
+     stylix.fonts = {
+    serif = config.stylix.fonts.monospace;
+    sansSerif = config.stylix.fonts.monospace;
+    emoji = config.stylix.fonts.monospace;
+  };
+  */
 }
