@@ -1,3 +1,3 @@
 {...}: {
-  imports = [./terminal.nix ./syncthing.nix];
+  imports = [./terminal.nix ./syncthing.nix ./steam.nix];
 }

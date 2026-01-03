@@ -19,6 +19,16 @@
   };
   fingerprintSupported = false;
 
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [
+      "rar"
+      "steam-unwrapped"
+    ];
+
+  nixpkgs.config.permittedInsecurePackages = [
+    "intel-media-sdk-23.2.2"
+  ];
+
   networking.hostName = "serverless";
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;

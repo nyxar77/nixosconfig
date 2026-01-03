@@ -74,8 +74,12 @@ in
         };
         networking.wireless.iwd.enable = true;
         networking.wireless.iwd.settings = {
-          Network = "";
-          Settings = "";
+          Network = {
+            EnableIPv6 = false;
+          };
+          Settings = {
+            AutoConnect = true;
+          };
         };
 
         networking.hostName = "serverless"; # Define your hostname.
