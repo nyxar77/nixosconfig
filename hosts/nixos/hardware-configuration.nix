@@ -21,7 +21,11 @@
   boot.extraModulePackages = [];
   #NOTE: hibernation
   boot = {
-    kernelParams = ["resume_offset=9865216"];
+    kernelParams = [
+      "resume_offset=9865216"
+      "amd_pstate=active"
+      "kvm"
+    ];
     resumeDevice = "/dev/disk/by-uuid/21e56820-9732-4c89-8b22-2226eef95215";
   };
 

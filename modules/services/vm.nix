@@ -18,7 +18,8 @@
         nvram = [
            "${pkgs.OVMF}/FV/OVMF.fd:${pkgs.OVMF}/FV/OVMF_VARS.fd"
          ]'';
-      ovmf = {
+      /*
+         ovmf = {
         enable = true;
         packages = [
           (pkgs.OVMF.override {
@@ -27,6 +28,7 @@
           }).fd
         ];
       };
+      */
     };
   };
   programs.virt-manager.enable = true;

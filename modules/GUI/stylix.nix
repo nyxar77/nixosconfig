@@ -8,7 +8,11 @@
     stylix = {
       enable = true;
       autoEnable = true;
-      base16Scheme = let
+      image = null;
+      polarity = "dark";
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+      /*
+         base16Scheme = let
         base16-schemes = pkgs.base16-schemes.overrideAttrs (oldAttrs: {
           version = "0-unstable-2025-9-25";
           src = pkgs.fetchFromGitHub {
@@ -19,7 +23,7 @@
           };
         });
       in "${base16-schemes}/share/themes/hardhacker.yaml";
-      image = null;
+      */
       /*
          base16Scheme = {
         base00 = "#211e2a";

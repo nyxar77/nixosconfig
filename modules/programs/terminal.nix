@@ -28,7 +28,6 @@
     shells = [
       pkgs.zsh
       pkgs.bash
-      pkgs.fish
     ];
     variables = {
       MANPAGER = "nvim +Man!";

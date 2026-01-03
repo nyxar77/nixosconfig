@@ -1,4 +1,10 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+lib.mkIf (config.fingerprintSupported) {
   # Enable fingerprint.
   services.fprintd = {
     enable = true;

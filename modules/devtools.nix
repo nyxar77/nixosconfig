@@ -18,7 +18,6 @@
     appimage-run
     steam-run
     mycli
-    oracle-instantclient
   ];
 
   programs.direnv = {

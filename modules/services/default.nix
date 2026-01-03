@@ -10,12 +10,8 @@
     ./vm.nix
     ./maintenance.nix
     ./apache.nix
+    # ./fingerprint.nix
   ];
-  /*
-     ++ lib.optionals config.fingerprintSupported [
-    ./fingerprint.nix
-  ];
-  */
 
   services = {
     gvfs.enable = true; # NOTE: automount/umount

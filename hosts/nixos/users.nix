@@ -8,7 +8,6 @@
       extraGroups = [
         "networkmanager"
         "wheel"
-        # "docker"
         "libvirt"
         "adbusers"
         "plugdev"
