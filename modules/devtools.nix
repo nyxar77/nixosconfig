@@ -1,8 +1,4 @@
-{
-  lib,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     # ------ developpement ------
     zip
@@ -22,6 +18,7 @@
 
   programs.direnv = {
     enable = true;
+    silent = true;
     nix-direnv.enable = true;
   };
 

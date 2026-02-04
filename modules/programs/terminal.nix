@@ -13,15 +13,11 @@
     jq
     fzf
     fd
-    bat
     htop
     # delta
-    ripgrep # recursive search, run rg
-    eza
     pstree
     lsof # listen open files
     brightnessctl
-    # --------------------------
   ];
 
   environment = {

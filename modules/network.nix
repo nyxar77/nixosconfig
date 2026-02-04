@@ -16,18 +16,26 @@ in
 
         networking.networkmanager = {
           enable = true;
-          insertNameservers = [
+          /*
+             insertNameservers = [
             "1.1.1.3"
             "9.9.9.9"
           ];
+          */
         };
+        networking.nameservers = [
+          "1.1.1.3"
+          "9.9.9.9"
+        ];
+
         networking.hosts = {
           "192.168.1.50" = ["serverless"];
+          "127.0.0.60" = ["nix.progresso.com"];
+          "127.0.0.61" = ["nix.githubfetcher.com"];
         };
 
         networking.wireless.iwd.enable = true;
 
-        # Open ports in the firewall.
         networking.firewall = {
           enable = true;
           allowedTCPPorts = [

@@ -1,8 +1,4 @@
-{
-  config,
-  lib,
-  ...
-}: {
+{...}: {
   imports = [
     ./network.nix
     ./powerManagement.nix

@@ -23,7 +23,6 @@
     mtr-gui
     winetricks
     wineWowPackages.waylandFull
-    blender-hip
     waydroid
   ];
 }
