@@ -6,11 +6,12 @@
     libvirt
     swtpm
     quickemu
-    #        quickgui
+    quickgui
   ];
   virtualisation.libvirtd = {
     enable = true;
-    qemu = {
+    /*
+       qemu = {
       package = pkgs.qemu_kvm;
       runAsRoot = true;
       swtpm.enable = true;
@@ -18,8 +19,8 @@
         nvram = [
            "${pkgs.OVMF}/FV/OVMF.fd:${pkgs.OVMF}/FV/OVMF_VARS.fd"
          ]'';
-      /*
-         ovmf = {
+
+      ovmf = {
         enable = true;
         packages = [
           (pkgs.OVMF.override {
@@ -28,8 +29,11 @@
           }).fd
         ];
       };
-      */
     };
+    */
   };
   programs.virt-manager.enable = true;
+
+  services.qemuGuest.enable = true;
+  services.spice-vdagentd.enable = true;
 }
