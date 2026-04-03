@@ -5,7 +5,7 @@
 }: {
   imports = [
     ./keyd.nix
-    ./sound.nix
+    ./audio.nix
     ./virtualisation.nix
     ./vm.nix
     ./maintenance.nix

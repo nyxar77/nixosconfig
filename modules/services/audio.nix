@@ -1,5 +1,4 @@
-{ lib, ... }:
-{
+{lib, ...}: {
   # enable bluetooth
   hardware.bluetooth.enable = true;
   # Enable sound with pipewire.
@@ -11,6 +10,7 @@
     alsa.support32Bit = true;
     wireplumber.enable = true;
     pulse.enable = true;
+
     jack.enable = true;
   };
 }
