@@ -10,7 +10,6 @@
     ../../modules
   ];
 
-  networking.hostName = "nixos"; # Define your hostname.
   hosts.host = "nixos";
   desktopManagers = {
     enable = true;

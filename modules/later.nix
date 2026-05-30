@@ -21,8 +21,7 @@
 
     # ------------------------
     mtr-gui
-    winetricks
-    wineWowPackages.waylandFull
-    waydroid
+    # winetricks
+    # wineWowPackages.waylandFull
   ];
 }

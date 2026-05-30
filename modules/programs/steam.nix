@@ -8,7 +8,6 @@ lib.mkIf (hostRole == "nixos") {
   programs = {
     thunderbird.enable = true;
     nix-ld.enable = true;
-    neovim.enable = true;
     zsh.enable = true;
   };
   programs.steam = {

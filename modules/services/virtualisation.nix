@@ -1,4 +1,4 @@
 {...}: {
   virtualisation.containers.enable = true;
-  virtualisation.waydroid.enable = false;
+  # virtualisation.waydroid.enable = false;
 }

@@ -16,6 +16,9 @@ in
 
         networking.networkmanager = {
           enable = true;
+          dns = "default";
+          wifi.backend = "iwd";
+          wifi.powersave = false;
           /*
              insertNameservers = [
             "1.1.1.3"
@@ -23,6 +26,8 @@ in
           ];
           */
         };
+
+        networking.hostName = "nixos"; # Define your hostname.
         networking.nameservers = [
           "1.1.1.3"
           "9.9.9.9"
@@ -35,6 +40,11 @@ in
         };
 
         networking.wireless.iwd.enable = true;
+
+        networking.wireless.iwd.settings = {
+          Network.EnableIPv6 = false;
+          Settings.AutoConnect = true;
+        };
 
         networking.firewall = {
           enable = true;
@@ -79,7 +89,9 @@ in
 
         networking.networkmanager = {
           enable = false;
+          dns = "none";
         };
+
         networking.wireless.iwd.enable = true;
         networking.wireless.iwd.settings = {
           Network = {
