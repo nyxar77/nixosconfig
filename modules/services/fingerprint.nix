@@ -4,7 +4,7 @@
   config,
   ...
 }:
-lib.mkIf (config.fingerprintSupported) {
+lib.mkIf config.nyx.hardware.fingerprint {
   # Enable fingerprint.
   services.fprintd = {
     enable = true;

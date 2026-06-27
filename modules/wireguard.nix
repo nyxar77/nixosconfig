@@ -1,12 +1,12 @@
 {
+  config,
   lib,
   pkgs,
-  hostRole,
   ...
 }:
 lib.mkMerge [
   lib.mkIf
-  (hostRole == "nixos")
+  (config.nyx.host.name == "nixos")
   {
     networking.wireguard.enable = false;
     networking.wireguard.interfaces.wg0 = {
@@ -26,7 +26,7 @@ lib.mkMerge [
   }
 
   lib.mkIf
-  (hostRole == "serverless")
+  (config.nyx.host.name == "serverless")
   {
     networking.wireguard.enable = false;
     networking.wireguard.interfaces.wg0 = {
@@ -104,4 +104,3 @@ lib.mkMerge [
     else {};
 }
 */
-

@@ -1,13 +1,20 @@
-{pkgs, ...}: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+lib.mkIf config.nyx.services.virtualization.host {
   environment.systemPackages = with pkgs; [
     bridge-utils
-    qemu_kvm
     libosinfo
     libvirt
-    swtpm
+    qemu_kvm
     quickemu
     quickgui
+    swtpm
   ];
+
   virtualisation.libvirtd = {
     enable = true;
     /*
@@ -32,8 +39,6 @@
     };
     */
   };
-  programs.virt-manager.enable = true;
 
-  services.qemuGuest.enable = true;
-  services.spice-vdagentd.enable = true;
+  programs.virt-manager.enable = true;
 }

@@ -7,17 +7,22 @@
   imports = [
     ./users.nix
     ./hardware-configuration.nix
-    ../../modules
+    ./network.nix
+    ../../modules/profiles/server.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  hosts.host = "serverless";
-  desktopManagers = {
-    enable = false;
+  nyx = {
+    host = {
+      name = "serverless";
+      role = "server";
+    };
+
+    desktop.enable = false;
+    hardware.fingerprint = false;
   };
-  fingerprintSupported = false;
 
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
@@ -29,7 +34,6 @@
     "intel-media-sdk-23.2.2"
   ];
 
-  networking.hostName = "serverless";
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   hardware.graphics = {

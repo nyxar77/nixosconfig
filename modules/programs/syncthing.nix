@@ -1,9 +1,9 @@
 {
-  hostRole,
+  config,
   lib,
   ...
 }:
-lib.mkIf (hostRole == "nixos") {
+lib.mkIf config.nyx.services.syncthing.enable {
   services = {
     syncthing = {
       enable = true;

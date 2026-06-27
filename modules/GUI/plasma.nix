@@ -3,8 +3,8 @@
   lib,
   ...
 }: let
-  desktopEnabled = config.desktopManagers.enable;
-  isPlasma = desktopEnabled && config.desktopManagers.mode == "plasma";
+  desktopEnabled = config.nyx.desktop.enable;
+  isPlasma = desktopEnabled && config.nyx.desktop.session == "plasma";
 in
   lib.mkIf isPlasma {
     services = {

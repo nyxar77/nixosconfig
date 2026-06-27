@@ -4,7 +4,7 @@
   pkgs,
   ...
 }:
-lib.mkIf (config.desktopManagers.enable) {
+lib.mkIf config.nyx.desktop.enable {
   stylix = {
     enable = true;
     autoEnable = true;

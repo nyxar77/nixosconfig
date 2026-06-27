@@ -1,15 +1,10 @@
 {
+  config,
   lib,
   pkgs,
-  hostRole,
   ...
 }:
-lib.mkIf (hostRole == "nixos") {
-  programs = {
-    thunderbird.enable = true;
-    nix-ld.enable = true;
-    zsh.enable = true;
-  };
+lib.mkIf config.nyx.services.steam.enable {
   programs.steam = {
     enable = true;
 

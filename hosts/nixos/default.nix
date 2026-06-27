@@ -7,15 +7,32 @@
   imports = [
     ./users.nix
     ./hardware-configuration.nix
-    ../../modules
+    ./network.nix
+    ./web.nix
+    ../../modules/profiles/workstation.nix
   ];
 
-  hosts.host = "nixos";
-  desktopManagers = {
-    enable = true;
-    mode = "hyprland";
+  nyx = {
+    host = {
+      name = "nixos";
+      role = "workstation";
+    };
+
+    desktop = {
+      enable = true;
+      session = "hyprland";
+    };
+
+    hardware.fingerprint = true;
+
+    services = {
+      mysql.enable = true;
+      steam.enable = true;
+      syncthing.enable = true;
+      web.enable = true;
+      virtualization.host = true;
+    };
   };
-  fingerprintSupported = true;
 
   environment.pathsToLink = ["/share/zsh"];
   boot.loader = {

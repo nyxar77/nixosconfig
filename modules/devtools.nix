@@ -21,9 +21,4 @@
     silent = true;
     nix-direnv.enable = true;
   };
-
-  services.mysql = {
-    enable = true;
-    package = pkgs.mariadb;
-  };
 }

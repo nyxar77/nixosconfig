@@ -5,10 +5,10 @@
   inputs,
   ...
 }: let
-  cfg = config.desktopManagers;
+  cfg = config.nyx.desktop;
   # hyprlandPkgs = inputs.prevPkgs.legacyPackages.${pkgs.system};
 in
-  lib.mkIf (cfg.enable && cfg.mode == "hyprland") {
+  lib.mkIf (cfg.enable && cfg.session == "hyprland") {
     services.displayManager = {
       defaultSession = "hyprland-uwsm";
       sddm = {

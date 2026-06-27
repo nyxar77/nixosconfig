@@ -54,7 +54,6 @@
         specialArgs = {
           inherit inputs;
           inherit (inputs) stylix;
-          hostRole = "nixos";
         };
       };
 
@@ -64,9 +63,6 @@
           ./hosts/serverless
           ./lib
         ];
-        specialArgs = {
-          hostRole = "serverless";
-        };
       };
     };
   };
