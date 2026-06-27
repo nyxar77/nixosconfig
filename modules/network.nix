@@ -16,15 +16,14 @@ in
 
         networking.networkmanager = {
           enable = true;
-          dns = "default";
+          dns = "none";
           wifi.backend = "iwd";
           wifi.powersave = false;
-          /*
-             insertNameservers = [
+
+          insertNameservers = [
             "1.1.1.3"
             "9.9.9.9"
           ];
-          */
         };
 
         networking.hostName = "nixos"; # Define your hostname.

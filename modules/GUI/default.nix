@@ -1,11 +1,15 @@
 {
   lib,
-  config,
+  hostRole,
   ...
 }: {
-  imports = [
-    ./desktop-manager.nix
-    ./stylix.nix
-    ./tty.nix
-  ];
+  imports =
+    [
+      ./desktop-manager.nix
+      ./tty.nix
+    ]
+    ++ lib.optionals (hostRole == "nixos") [
+      ./stylix.nix
+      ./hyprland.nix
+    ];
 }

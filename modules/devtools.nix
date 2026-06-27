@@ -13,7 +13,7 @@
     xdg-utils
     appimage-run
     steam-run
-    mycli
+    # mycli
   ];
 
   programs.direnv = {

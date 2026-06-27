@@ -21,7 +21,10 @@
 
     # ------------------------
     mtr-gui
+    nocturne
     # winetricks
     # wineWowPackages.waylandFull
   ];
+  programs.gpu-screen-recorder.enable = true;
+  programs.thunar.enable = true;
 }
