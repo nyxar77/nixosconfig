@@ -12,60 +12,99 @@
       inputs.hyprland.follows = "hyprland";
     };
     */
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+
     stylix = {
       url = "github:nix-community/stylix/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = {
-    self,
+  outputs = inputs @ {
+    flake-parts,
     nixpkgs,
     ...
-  } @ inputs: let
-    system = "x86_64-linux";
-    pkgs = import nixpkgs {
-      inherit system;
-      config = {
-        allowUnfree = true;
-        permittedInsecurePackages = ["openssl-1.1.1w"];
-      };
-      overlays = [
-        /*
-           (final: prev: {
-          openblas = prev.openblas.overrideAttrs (_: {
-            doCheck = false;
-          });
-        })
-        */
-        /*
-           final: prev: {
-          base16-schemes = inputs.unstable.legacyPackages.${system}.base16-schemes;
-        }
-        */
+  }:
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
       ];
-    };
-  in {
-    nixosConfigurations = {
-      nixos = nixpkgs.lib.nixosSystem {
-        inherit pkgs;
-        modules = [
-          inputs.stylix.nixosModules.stylix
-          ./hosts/nixos
-          ./lib
-        ];
-        specialArgs = {
-          inherit inputs;
-          inherit (inputs) stylix;
+
+      flake = let
+        hostSystem = "x86_64-linux";
+        mkPkgs = system:
+          import nixpkgs {
+            inherit system;
+            config = {
+              allowUnfree = true;
+              permittedInsecurePackages = ["openssl-1.1.1w"];
+            };
+            overlays = [
+              /*
+                 (final: prev: {
+                openblas = prev.openblas.overrideAttrs (_: {
+                  doCheck = false;
+                });
+              })
+              */
+              /*
+                 final: prev: {
+                base16-schemes = inputs.unstable.legacyPackages.${system}.base16-schemes;
+              }
+              */
+            ];
+          };
+
+        mkHost = {
+          name,
+          system ? hostSystem,
+          pkgs ? null,
+          extraModules ? [],
+          specialArgs ? {},
+        }:
+          nixpkgs.lib.nixosSystem ({
+              modules =
+                [
+                  ./hosts/${name}
+                  ./lib
+                ]
+                ++ extraModules;
+
+              specialArgs =
+                {
+                  inherit inputs;
+                }
+                // specialArgs;
+            }
+            // (
+              if pkgs == null
+              then {inherit system;}
+              else {inherit pkgs;}
+            ));
+
+        pkgs = mkPkgs hostSystem;
+      in {
+        nixosConfigurations = {
+          nixos = mkHost {
+            name = "nixos";
+            inherit pkgs;
+            extraModules = [
+              inputs.stylix.nixosModules.stylix
+            ];
+            specialArgs = {
+              inherit (inputs) stylix;
+            };
+          };
+
+          serverless = mkHost {
+            name = "serverless";
+          };
         };
       };
-
-      serverless = nixpkgs.lib.nixosSystem {
-        inherit system;
-        modules = [
-          ./hosts/serverless
-          ./lib
-        ];
-      };
     };
-  };
 }

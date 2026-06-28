@@ -1,7 +1,30 @@
-{lib, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: {
   console = {
     keyMap = lib.mkForce "fr";
     font = "Lat2-Terminus16";
+  };
+
+  services.kmscon = {
+    enable = true;
+    term = "xterm-256color";
+    fonts = [
+      {
+        name = "JetBrainsMono Nerd Font";
+        package = pkgs.nerd-fonts.jetbrains-mono;
+      }
+      {
+        name = "Noto Sans";
+        package = pkgs.noto-fonts;
+      }
+    ];
+    extraConfig = ''
+      font-size=14
+      xkb-layout=fr
+    '';
   };
 
   services.getty.helpLine = ''
@@ -21,7 +44,7 @@
     grep = "rg";
     ll = "eza -lah --git --group-directories-first";
     ls = "eza --group-directories-first";
-    mux = "zellij";
+    mux = "tmux";
     space = "dust";
     top = "btop";
   };
