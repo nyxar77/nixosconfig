@@ -2,7 +2,7 @@
   imports = [
     ./plasma.nix
     ./tty.nix
-    # ./stylix.nix
+    ./stylix.nix
     ./hyprland.nix
   ];
 }

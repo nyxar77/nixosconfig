@@ -12,12 +12,10 @@
       inputs.hyprland.follows = "hyprland";
     };
     */
-    /*
-       stylix = {
+    stylix = {
       url = "github:nix-community/stylix/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    */
   };
   outputs = {
     self,
@@ -51,13 +49,13 @@
       nixos = nixpkgs.lib.nixosSystem {
         inherit pkgs;
         modules = [
-          # inputs.stylix.nixosModules.stylix
+          inputs.stylix.nixosModules.stylix
           ./hosts/nixos
           ./lib
         ];
         specialArgs = {
           inherit inputs;
-          # inherit (inputs) stylix;
+          inherit (inputs) stylix;
         };
       };
 
