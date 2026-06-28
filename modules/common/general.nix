@@ -1,4 +1,4 @@
-{...}: {
+{lib, ...}: {
   time.timeZone = "Africa/Casablanca";
 
   # Select internationalisation properties.
@@ -15,5 +15,5 @@
     LC_NAME = "fr_FR.UTF-8";
   };
 
-  console.keyMap = "us";
+  console.keyMap = lib.mkDefault "us";
 }

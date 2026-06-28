@@ -30,7 +30,7 @@
       steam.enable = true;
       syncthing.enable = true;
       web.enable = true;
-      virtualization.host = true;
+      virtualization.host = false;
     };
   };
 

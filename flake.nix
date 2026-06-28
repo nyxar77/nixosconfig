@@ -12,10 +12,12 @@
       inputs.hyprland.follows = "hyprland";
     };
     */
-    stylix = {
+    /*
+       stylix = {
       url = "github:nix-community/stylix/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    */
   };
   outputs = {
     self,
@@ -30,11 +32,13 @@
         permittedInsecurePackages = ["openssl-1.1.1w"];
       };
       overlays = [
-        (final: prev: {
+        /*
+           (final: prev: {
           openblas = prev.openblas.overrideAttrs (_: {
             doCheck = false;
           });
         })
+        */
         /*
            final: prev: {
           base16-schemes = inputs.unstable.legacyPackages.${system}.base16-schemes;
@@ -47,13 +51,13 @@
       nixos = nixpkgs.lib.nixosSystem {
         inherit pkgs;
         modules = [
-          inputs.stylix.nixosModules.stylix
+          # inputs.stylix.nixosModules.stylix
           ./hosts/nixos
           ./lib
         ];
         specialArgs = {
           inherit inputs;
-          inherit (inputs) stylix;
+          # inherit (inputs) stylix;
         };
       };
 

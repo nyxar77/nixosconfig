@@ -1,18 +1,26 @@
 {
   lib,
   config,
-  pkgs,
   ...
 }: {
   imports = [
+    ./fastfetch.nix
     ./users.nix
     ./hardware-configuration.nix
     ./network.nix
+    ./tealdeer.nix
+    ./tmux.nix
+    ./tty.nix
     ../../modules/profiles/server.nix
   ];
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi = {
+      canTouchEfiVariables = true;
+      efiSysMountPoint = "/boot/efi";
+    };
+  };
 
   nyx = {
     host = {
@@ -30,16 +38,15 @@
       "steam-unwrapped"
     ];
 
-  nixpkgs.config.permittedInsecurePackages = [
-    "intel-media-sdk-23.2.2"
-  ];
-
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  hardware.graphics = {
-    enable = true;
-    extraPackages = with pkgs; [intel-media-sdk];
+  hardware = {
+    enableRedistributableFirmware = true;
+    cpu.intel.updateMicrocode = true;
   };
+
+  powerManagement.cpuFreqGovernor = "performance";
+  services.thermald.enable = true;
+  services.irqbalance.enable = true;
 
   system.stateVersion = "24.11";
 }
