@@ -22,11 +22,11 @@
   #NOTE: hibernation
   boot = {
     kernelParams = [
-      "resume_offset=9865216"
+      # "resume_offset=9865216"
       "amd_pstate=active"
       "kvm"
     ];
-    resumeDevice = "/dev/disk/by-uuid/21e56820-9732-4c89-8b22-2226eef95215";
+    # resumeDevice = "/dev/disk/by-uuid/21e56820-9732-4c89-8b22-2226eef95215";
   };
 
   fileSystems."/" = {
@@ -54,10 +54,12 @@
   };
 
   swapDevices = [
-    {
+    /*
+       {
       device = "/home/swapfile";
       size = 16 * 1024; # 16GB
     }
+    */
   ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
