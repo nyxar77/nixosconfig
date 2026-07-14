@@ -1,12 +1,23 @@
 {...}: {
   programs.mtr.enable = true;
 
-  networking = {
-    hostName = "nixos";
-    nameservers = [
+  /*
+     services.resolved = {
+    enable = true;
+    settings.Resolve.FallbackDNS = [
       "1.1.1.3"
       "9.9.9.9"
     ];
+  };
+  */
+  networking = {
+    hostName = "nixos";
+    /*
+       nameservers = [
+      "1.1.1.3"
+      "9.9.9.9"
+    ];
+    */
 
     hosts = {
       "192.168.1.50" = ["serverless"];

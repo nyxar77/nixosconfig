@@ -11,5 +11,6 @@
     # delta
     pstree
     lsof # listen open files
+    dig
   ];
 }
