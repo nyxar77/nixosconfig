@@ -2,59 +2,74 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }: let
   cfg = config.nyx.desktop;
-  # hyprlandPkgs = inputs.prevPkgs.legacyPackages.${pkgs.system};
+  sddm-astronaut = pkgs.sddm-astronaut.override {
+    embeddedTheme = "pixel_sakura";
+
+    themeConfig = {
+      HeaderText = "Welcome back, nyxar";
+      DateFormat = "dddd, MMMM d";
+      HourFormat = "HH:mm";
+
+      HeaderTextColor = "#d5c4a1";
+      DateTextColor = "#d5c4a1";
+      TimeTextColor = "#ebdbb2";
+      FormBackgroundColor = "#1d2021";
+      Background = "Backgrounds/pixel_sakura.gif";
+    };
+  };
 in
   lib.mkIf (cfg.enable && cfg.session == "hyprland") {
+    console = {
+      keyMap = lib.mkForce "fr";
+      useXkbConfig = true;
+    };
+
     services.displayManager = {
       defaultSession = "hyprland-uwsm";
       sddm = {
         enable = true;
         autoNumlock = true;
         wayland.enable = true;
+
+        package = pkgs.kdePackages.sddm;
+        theme = "sddm-astronaut-theme";
+        settings = {
+          Theme = {
+            CursorTheme = "catppuccin-mocha-red-cursors";
+            CursorSize = 24;
+          };
+        };
+
+        extraPackages = with pkgs.kdePackages; [
+          qtmultimedia
+          qtsvg
+          qtvirtualkeyboard
+        ];
       };
+
+      autoLogin = {
+        enable = false;
+        user = "nyxar";
+      };
+    };
+
+    services.xserver.xkb = {
+      layout = "fr";
+      variant = "azerty";
     };
 
     programs.hyprland = {
       enable = true;
-      /*
-         package = hyprlandPkgs.hyprland;
-      portalPackage = hyprlandPkgs.xdg-desktop-portal-hyprland;
-      */
       package = pkgs.hyprland;
       portalPackage = pkgs.xdg-desktop-portal-hyprland;
       withUWSM = true;
       xwayland.enable = true;
     };
 
-    # programs.hyprlock.enable = true;
-
-    /*
-       programs.regreet = {
-      enable = true;
-      theme = lib.mkForce {
-        package = pkgs.sweet;
-        name = "Sweet-Dark";
-      };
-      iconTheme = lib.mkForce {
-        package = pkgs.papirus-icon-theme;
-        name = "Papirus-Dark";
-      };
-      font = lib.mkForce {
-        package = pkgs.inter;
-        name = "Inter";
-        size = 16;
-      };
-      cursorTheme = lib.mkForce {
-        package = pkgs.catppuccin-cursors.mochaMauve;
-        name = "catppuccin-mocha-red-cursors";
-      };
-    };
-    */
-
+    #ATT: disabled
     services = {
       greetd = {
         enable = false;
@@ -66,38 +81,58 @@ in
         };
       };
 
-      gvfs.enable = true;
-      # hypridle is user-scoped and enabled in Home Manager.
       upower.enable = true;
     };
 
     xdg.portal = {
       enable = true;
+
       xdgOpenUsePortal = true;
+
       extraPortals = with pkgs; [
         xdg-desktop-portal-gtk
+        # xdg-desktop-portal-wlr
       ];
+
       config = {
         common = {
-          default = ["hyprland" "gtk"];
+          default = [
+            "hyprland"
+            "gtk"
+          ];
+
+          "org.freedesktop.impl.portal.ScreenCast" = ["hyprland"];
+          "org.freedesktop.impl.portal.Screenshot" = ["hyprland"];
+          "org.freedesktop.impl.portal.GlobalShortcuts" = ["hyprland"];
+
           "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
+          "org.freedesktop.impl.portal.AppChooser" = ["gtk"];
         };
+
         hyprland = {
-          default = ["hyprland" "gtk"];
+          default = [
+            "hyprland"
+            "gtk"
+          ];
+
+          "org.freedesktop.impl.portal.ScreenCast" = ["hyprland"];
+          "org.freedesktop.impl.portal.Screenshot" = ["hyprland"];
+          "org.freedesktop.impl.portal.GlobalShortcuts" = ["hyprland"];
+
           "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
-        };
-        Hyprland = {
-          default = ["hyprland" "gtk"];
-          "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
+          "org.freedesktop.impl.portal.AppChooser" = ["gtk"];
         };
       };
     };
 
     environment.systemPackages = with pkgs; [
+      kdePackages.qt6ct
+      kdePackages.qtstyleplugin-kvantum
+      pinentry-qt
+      sddm-astronaut
       # Caelestia/Hyprland helpers referenced by the dots or useful in this session.
       # System session pieces stay here; per-user helpers live in Home Manager.
       # hyprcursor
-      pinentry-qt
 
       # Optional local tools. Keep disabled until something actually uses them.
       # awww # Wallpaper daemon; Caelestia handles wallpapers through its own shell/CLI.

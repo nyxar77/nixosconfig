@@ -11,6 +11,10 @@ lib.mkIf config.nyx.desktop.enable {
     image = null;
     polarity = "dark";
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+    targets.qt = {
+      enable = true;
+      platform = "qtct";
+    };
     /*
        base16Scheme = let
       base16-schemes = pkgs.base16-schemes.overrideAttrs (oldAttrs: {
@@ -45,7 +49,6 @@ lib.mkIf config.nyx.desktop.enable {
     };
     */
   };
-
   /*
      stylix.fonts = {
     serif = config.stylix.fonts.monospace;
