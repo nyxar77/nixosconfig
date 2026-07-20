@@ -2,6 +2,7 @@
   imports = [
     ./users.nix
     ./hardware-configuration.nix
+    ./memory.nix
     ./network.nix
     ./web.nix
     ../../modules/profiles/workstation.nix
