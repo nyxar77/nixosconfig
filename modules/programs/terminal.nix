@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   environment.systemPackages = with pkgs; [
     nurl
     wget
@@ -7,7 +7,6 @@
     jq
     fzf
     fd
-    htop
     # delta
     pstree
     lsof # listen open files
