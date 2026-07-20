@@ -44,20 +44,7 @@
               allowUnfree = true;
               permittedInsecurePackages = ["openssl-1.1.1w"];
             };
-            overlays = [
-              /*
-                 (final: prev: {
-                openblas = prev.openblas.overrideAttrs (_: {
-                  doCheck = false;
-                });
-              })
-              */
-              /*
-                 final: prev: {
-                base16-schemes = inputs.unstable.legacyPackages.${system}.base16-schemes;
-              }
-              */
-            ];
+            overlays = [];
           };
 
         mkHost = {
