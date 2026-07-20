@@ -11,11 +11,11 @@ lib.mkIf config.nyx.services.syncthing.enable {
       dataDir = "/home/nyxar";
       configDir = "/home/nyxar/.config/syncthing";
       openDefaultPorts = true;
+      guiPasswordFile = config.sops.secrets.syncthing-gui-password.path;
 
       settings = {
         gui = {
           user = "nyxar";
-          password = "iWDxPvM$7ZRisfvfd4t%5ZNmtQ`iZY4$XXyCA";
         };
         devices = {
           "reno4" = {
@@ -43,22 +43,27 @@ lib.mkIf config.nyx.services.syncthing.enable {
           };
           "music" = {
             id = "Music-spo";
-            path = "/home/nyxar/Music/spotify/";
+            path = "${userDir}/Music/spotify/";
             devices = devices;
           };
           "pfp" = {
             id = "pfp";
-            path = "/home/nyxar/Pictures/wallpaper-pfp/pfp/";
+            path = "${userDir}/Pictures/pfp/";
             devices = devices;
           };
           "The_Bp" = {
             id = "Bp-ms";
-            path = "/home/nyxar/Documents/The-Bp/";
+            path = "${userDir}/Documents/syncthing/The-Bp/";
             devices = devices;
           };
           "Configs" = {
             id = "global-config";
-            path = "/home/nyxar/Documents/global-Configs/";
+            path = "${userDir}/Documents/syncthing/global-Configs/";
+            devices = devices;
+          };
+          "Twitter" = {
+            id = "Twitter-sync";
+            path = "${userDir}/Documents/syncthing/Twitter/";
             devices = devices;
           };
         };

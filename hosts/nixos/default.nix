@@ -4,6 +4,7 @@
     ./hardware-configuration.nix
     ./memory.nix
     ./network.nix
+    ./secrets.nix
     ./web.nix
     ../../modules/profiles/workstation.nix
   ];

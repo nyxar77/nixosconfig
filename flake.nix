@@ -17,8 +17,8 @@
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
 
-    stylix = {
-      url = "github:nix-community/stylix/release-26.05";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -94,11 +94,8 @@
             name = "nixos";
             inherit pkgs;
             extraModules = [
-              inputs.stylix.nixosModules.stylix
+              inputs.sops-nix.nixosModules.sops
             ];
-            specialArgs = {
-              inherit (inputs) stylix;
-            };
           };
 
           serverless = mkHost {
