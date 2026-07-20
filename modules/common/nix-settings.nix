@@ -1,4 +1,4 @@
-{lib, ...}: {
+{ lib, ... }: {
   # nixpkgs.config.allowUnfree = true;
   # Allow experimental feature "flakes"
   nix.settings.experimental-features = [
@@ -26,10 +26,12 @@
       # "nix-community.cachix.org-1:mB9kiyNJG0XrqcnihK6kQyE3XG8qV7yLs8uYe41rP2Q="
     ];
   };
-  system = {
+  /*
+     system = {
     autoUpgrade.enable = true;
     autoUpgrade.dates = lib.mkDefault "weekly";
   };
+  */
   nix.channel.enable = false;
 
   # nixpkgs.config.permittedInsecurePackages = [
