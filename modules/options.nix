@@ -1,7 +1,8 @@
 {
   lib,
   ...
-}: let
+}:
+let
   machines = ["nixos" "serverless"];
   roles = ["workstation" "server"];
   desktopSessions = ["hyprland" "plasma"];

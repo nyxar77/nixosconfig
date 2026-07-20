@@ -138,14 +138,14 @@ in
       # awww # Wallpaper daemon; Caelestia handles wallpapers through its own shell/CLI.
       # cava # Terminal visualizer, not the libcava library Caelestia shell needs.
       # flameshot # Redundant with Caelestia screenshots and grim/slurp/swappy.
-      # flavours # Redundant if Caelestia/Stylix owns colours.
+      # flavours # Redundant while Caelestia owns colours.
       # gtk-layer-shell # Old AGS/Hyprpanel dependency, not needed by Caelestia here.
       # gtk3 # Libraries should come from app deps unless you need GTK tools directly.
       # gtk4 # Libraries should come from app deps unless you need GTK tools directly.
       # hyprshot # Redundant with Caelestia screenshots and grim/slurp/swappy.
       # libdbusmenu-gtk3 # Old panel/tray dependency.
       # libgtop # Old Hyprpanel/system-monitor dependency.
-      # matugen # Redundant if Caelestia/Stylix owns colours.
+      # matugen # Redundant while Caelestia owns colours.
       # mpd-small # Only needed if you actually run an MPD setup.
       # ncmpcpp # Only useful with MPD.
       # networkmanager_dmenu # Caelestia has its own network UI; NetworkManager is enabled globally.

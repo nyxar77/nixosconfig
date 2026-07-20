@@ -11,7 +11,7 @@ lib.mkMerge [
   {
     networking.wireguard.enable = false;
     networking.wireguard.interfaces.wg0 = {
-      ips = ["10.100.0.2/32"];
+      ips = [ "10.100.0.2/32" ];
       listenPort = 45620;
       privateKeyFile = "/home/nyxar/wireguard-keys/private";
       peers = [

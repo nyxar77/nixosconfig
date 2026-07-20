@@ -1,5 +1,9 @@
-{...}: {
+{ ... }: {
   imports = [
-    ./maintenance.nix
+    ./apache.nix
+    ./fingerprint.nix
+    ./keyd.nix
+    ./mysql.nix
+    ./syncthing.nix
   ];
 }

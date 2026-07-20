@@ -1,4 +1,4 @@
-{lib, ...}: {
+{ lib, ... }: {
   time.timeZone = "Africa/Casablanca";
 
   # Select internationalisation properties.

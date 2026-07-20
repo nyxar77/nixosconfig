@@ -71,7 +71,7 @@
               modules =
                 [
                   ./hosts/${name}
-                  ./lib
+                  ./modules/options.nix
                 ]
                 ++ extraModules;
 
