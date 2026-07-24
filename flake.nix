@@ -21,6 +21,13 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    /*
+       chaotic = {
+      url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    */
   };
   outputs = inputs @ {
     flake-parts,
@@ -82,6 +89,12 @@
             inherit pkgs;
             extraModules = [
               inputs.sops-nix.nixosModules.sops
+
+              /*
+                 inputs.chaotic.nixosModules.nyx-cache
+              inputs.chaotic.nixosModules.nyx-overlay
+              inputs.chaotic.nixosModules.nyx-registry
+              */
             ];
           };
 
