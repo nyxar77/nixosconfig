@@ -12,6 +12,7 @@
     ./tmux.nix
     ./tty.nix
     ../../modules/profiles/server.nix
+    ../../modules/services/scx.nix
   ];
 
   boot.loader = {
