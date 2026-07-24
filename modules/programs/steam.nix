@@ -16,4 +16,5 @@ lib.mkIf config.nyx.services.steam.enable {
       };
     };
   };
+  programs.gamemode.enable = true;
 }
