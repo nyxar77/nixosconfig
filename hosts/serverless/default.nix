@@ -10,6 +10,7 @@
     ./network.nix
     ./tealdeer.nix
     ./tmux.nix
+    ./memory.nix
     ./tty.nix
     ../../modules/profiles/server.nix
     ../../modules/services/scx.nix
