@@ -8,7 +8,6 @@
     ./users.nix
     ./hardware-configuration.nix
     ./network.nix
-    ./tmux.nix
     ./memory.nix
     ./tty.nix
     ../../modules/profiles/server.nix
