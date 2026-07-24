@@ -1,4 +1,8 @@
-{config, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   imports = [
     ./users.nix
     ./hardware-configuration.nix
@@ -38,6 +42,8 @@
       efi.canTouchEfiVariables = true;
     };
     initrd.kernelModules = ["amdgpu"];
+    kernelPackages = pkgs.linuxPackages_zen;
+    # kernelPackages = pkgs.linuxPackages_cachyos;
     extraModulePackages = with config.boot.kernelPackages; [v4l2loopback];
     extraModprobeConfig = ''
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1

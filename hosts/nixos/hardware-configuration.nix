@@ -16,9 +16,7 @@
     "sd_mod"
     "rtsx_pci_sdmmc"
   ];
-  boot.initrd.kernelModules = [];
   boot.kernelModules = ["kvm-amd"];
-  boot.extraModulePackages = [];
   #NOTE: hibernation
   boot = {
     kernelParams = [
