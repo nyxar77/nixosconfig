@@ -1,18 +1,55 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   fonts = {
-    fontconfig.enable = true;
-    packages = with pkgs; [
-      poppins
-      fira-code
-      fira-code-symbols
-      material-symbols
-      nerd-fonts.fira-code
-      nerd-fonts.jetbrains-mono
+    # Oui : fournit DejaVu, Liberation, CJK, emoji, Unifont, etc.
+    enableDefaultPackages = true;
 
+    packages = with pkgs; [
+      # Police principale de l’interface
+      inter
+
+      # Couverture Unicode et arabe
       noto-fonts
-      noto-fonts-cjk-sans
-      liberation_ttf
-      dejavu_fonts
+
+      # Terminal et code
+      jetbrains-mono
+
+      nerd-fonts.symbols-only
     ];
+
+    fontconfig = {
+      enable = true;
+      antialias = true;
+
+      hinting = {
+        enable = true;
+        autohint = false;
+        style = "slight";
+      };
+
+      defaultFonts = {
+        sansSerif = [
+          "Inter"
+          "Noto Sans"
+          "Noto Sans Arabic"
+          "DejaVu Sans"
+        ];
+
+        serif = [
+          "Noto Serif"
+          "Noto Serif Arabic"
+          "DejaVu Serif"
+        ];
+
+        monospace = [
+          "JetBrains Mono"
+          "Noto Sans Mono"
+          "DejaVu Sans Mono"
+        ];
+
+        emoji = [
+          "Noto Color Emoji"
+        ];
+      };
+    };
   };
 }

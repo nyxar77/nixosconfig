@@ -1,8 +1,14 @@
 {pkgs, ...}: {
   # programs.thunar.enable = true;
-  environment.systemPackages = with pkgs; [
-    nautilus
-  ];
+  environment = {
+    systemPackages = with pkgs; [
+      nautilus
+      libheif
+      libheif.out
+    ];
+    pathsToLink = ["share/thumbnailers"];
+  };
+
   programs.nautilus-open-any-terminal = {
     enable = true;
     terminal = "kitty";

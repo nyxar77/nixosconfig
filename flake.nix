@@ -22,6 +22,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hyprland-guiutils = {
+      url = "github:hyprwm/hyprland-guiutils";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     /*
        chaotic = {
       url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
@@ -51,7 +56,11 @@
               allowUnfree = true;
               permittedInsecurePackages = ["openssl-1.1.1w"];
             };
-            overlays = [];
+            overlays = [
+              (final: prev: {
+                hyprland-qtutils = inputs.hyprland-guiutils.packages.${system}.hyprland-guiutils;
+              })
+            ];
           };
 
         mkHost = {

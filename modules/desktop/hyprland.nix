@@ -27,20 +27,24 @@ in
       useXkbConfig = true;
     };
 
+    services.xserver.enable = true;
+
     services.displayManager = {
       defaultSession = "hyprland-uwsm";
       sddm = {
         enable = true;
         autoNumlock = true;
-        wayland.enable = true;
+        wayland.enable = false;
 
         package = pkgs.kdePackages.sddm;
         theme = "sddm-astronaut-theme";
         settings = {
-          Theme = {
+          /*
+             Theme = {
             CursorTheme = "catppuccin-mocha-red-cursors";
             CursorSize = 24;
           };
+          */
         };
 
         extraPackages = with pkgs.kdePackages; [
