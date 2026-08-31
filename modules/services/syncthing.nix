@@ -39,32 +39,40 @@ lib.mkIf config.nyx.services.syncthing.enable {
           "keepass" = {
             id = "xkarx-qj2wy";
             path = "${userDir}/Documents/KeePass/Group1/";
-            devices = devices;
+            inherit devices;
           };
           "music" = {
             id = "Music-spo";
             path = "${userDir}/Music/spotify/";
-            devices = devices;
+            inherit devices;
           };
           "pfp" = {
             id = "pfp";
-            path = "${userDir}/Pictures/pfp/";
-            devices = devices;
+            path = "${userDir}/Pictures/Images/pfp";
+            inherit devices;
           };
           "The_Bp" = {
             id = "Bp-ms";
             path = "${userDir}/Documents/syncthing/The-Bp/";
-            devices = devices;
+            inherit devices;
           };
           "Configs" = {
             id = "global-config";
             path = "${userDir}/Documents/syncthing/global-Configs/";
-            devices = devices;
+            inherit devices;
           };
           "Twitter" = {
             id = "Twitter-sync";
             path = "${userDir}/Documents/syncthing/Twitter/";
-            devices = devices;
+            inherit devices;
+          };
+          "books" = {
+            id = "books-sync";
+            path = "${userDir}/Documents/syncthing/books";
+          };
+          "Notes" = {
+            id = "Notes-sync";
+            path = "${userDir}/Documents/Notes";
           };
         };
       };
