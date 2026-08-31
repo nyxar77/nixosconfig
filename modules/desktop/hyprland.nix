@@ -5,21 +5,6 @@
   ...
 }: let
   cfg = config.nyx.desktop;
-  sddm-astronaut = pkgs.sddm-astronaut.override {
-    embeddedTheme = "pixel_sakura";
-
-    themeConfig = {
-      HeaderText = "Welcome back, nyxar";
-      DateFormat = "dddd, MMMM d";
-      HourFormat = "HH:mm";
-
-      HeaderTextColor = "#d5c4a1";
-      DateTextColor = "#d5c4a1";
-      TimeTextColor = "#ebdbb2";
-      FormBackgroundColor = "#1d2021";
-      Background = "Backgrounds/pixel_sakura.gif";
-    };
-  };
 in
   lib.mkIf (cfg.enable && cfg.session == "hyprland") {
     console = {
@@ -29,36 +14,7 @@ in
 
     services.xserver.enable = true;
 
-    services.displayManager = {
-      defaultSession = "hyprland-uwsm";
-      sddm = {
-        enable = true;
-        autoNumlock = true;
-        wayland.enable = false;
-
-        package = pkgs.kdePackages.sddm;
-        theme = "sddm-astronaut-theme";
-        settings = {
-          /*
-             Theme = {
-            CursorTheme = "catppuccin-mocha-red-cursors";
-            CursorSize = 24;
-          };
-          */
-        };
-
-        extraPackages = with pkgs.kdePackages; [
-          qtmultimedia
-          qtsvg
-          qtvirtualkeyboard
-        ];
-      };
-
-      autoLogin = {
-        enable = false;
-        user = "nyxar";
-      };
-    };
+    services.displayManager.defaultSession = "hyprland-uwsm";
 
     services.xserver.xkb = {
       layout = "fr";

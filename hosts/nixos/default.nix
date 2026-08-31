@@ -24,6 +24,8 @@
       session = "hyprland";
     };
 
+    displayManager = "sddm";
+
     hardware.fingerprint = true;
 
     services = {

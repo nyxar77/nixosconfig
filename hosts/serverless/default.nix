@@ -29,6 +29,7 @@
     };
 
     desktop.enable = false;
+    displayManager = "ly";
     hardware.fingerprint = false;
   };
 

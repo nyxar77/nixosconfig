@@ -15,11 +15,6 @@ in
         videoDrivers = ["amdgpu"];
       };
 
-      displayManager.sddm = {
-        enable = true;
-        autoNumlock = true;
-      };
-
       desktopManager.plasma6.enable = true;
     };
   }

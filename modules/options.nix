@@ -6,6 +6,7 @@ let
   machines = ["nixos" "serverless"];
   roles = ["workstation" "server"];
   desktopSessions = ["hyprland" "plasma"];
+  displayManagers = ["none" "ly" "sddm"];
 in {
   options.nyx = {
     host = {
@@ -34,6 +35,12 @@ in {
         default = "hyprland";
         description = "Desktop session to configure when the desktop is enabled.";
       };
+    };
+
+    displayManager = lib.mkOption {
+      type = lib.types.enum displayManagers;
+      default = "none";
+      description = "Login manager to run independently of the desktop session.";
     };
 
     hardware = {
