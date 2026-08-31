@@ -44,52 +44,73 @@ in
       upower.enable = true;
     };
 
-    xdg.portal = {
-      enable = true;
+    xdg = {
+      autostart.enable = true;
+      icons.enable = true;
+      menus.enable = true;
+      sounds.enable = true;
+      terminal-exec = {
+        enable = true;
 
-      xdgOpenUsePortal = true;
-
-      extraPortals = with pkgs; [
-        xdg-desktop-portal-gtk
-        # xdg-desktop-portal-wlr
-      ];
-
-      config = {
-        common = {
+        settings = {
           default = [
-            "hyprland"
-            "gtk"
+            "kitty.desktop"
+            "Alacritty.desktop"
           ];
 
-          "org.freedesktop.impl.portal.ScreenCast" = ["hyprland"];
-          "org.freedesktop.impl.portal.Screenshot" = ["hyprland"];
-          "org.freedesktop.impl.portal.GlobalShortcuts" = ["hyprland"];
-
-          "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
-          "org.freedesktop.impl.portal.AppChooser" = ["gtk"];
+          Hyprland = [
+            "kitty.desktop"
+            "Alacritty.desktop"
+          ];
         };
+      };
+      portal = {
+        enable = true;
 
-        hyprland = {
-          default = [
-            "hyprland"
-            "gtk"
-          ];
+        xdgOpenUsePortal = true;
 
-          "org.freedesktop.impl.portal.ScreenCast" = ["hyprland"];
-          "org.freedesktop.impl.portal.Screenshot" = ["hyprland"];
-          "org.freedesktop.impl.portal.GlobalShortcuts" = ["hyprland"];
+        extraPortals = with pkgs; [
+          xdg-desktop-portal-gtk
+          # xdg-desktop-portal-wlr
+        ];
 
-          "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
-          "org.freedesktop.impl.portal.AppChooser" = ["gtk"];
+        config = {
+          common = {
+            default = [
+              "hyprland"
+              "gtk"
+            ];
+
+            "org.freedesktop.impl.portal.ScreenCast" = ["hyprland"];
+            "org.freedesktop.impl.portal.Screenshot" = ["hyprland"];
+            "org.freedesktop.impl.portal.GlobalShortcuts" = ["hyprland"];
+
+            "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
+            "org.freedesktop.impl.portal.AppChooser" = ["gtk"];
+          };
+
+          hyprland = {
+            default = [
+              "hyprland"
+              "gtk"
+            ];
+
+            "org.freedesktop.impl.portal.ScreenCast" = ["hyprland"];
+            "org.freedesktop.impl.portal.Screenshot" = ["hyprland"];
+            "org.freedesktop.impl.portal.GlobalShortcuts" = ["hyprland"];
+
+            "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
+            "org.freedesktop.impl.portal.AppChooser" = ["gtk"];
+          };
         };
       };
     };
 
     environment.systemPackages = with pkgs; [
+      xdg-utils
       kdePackages.qt6ct
       kdePackages.qtstyleplugin-kvantum
       pinentry-qt
-      sddm-astronaut
       # Caelestia/Hyprland helpers referenced by the dots or useful in this session.
       # System session pieces stay here; per-user helpers live in Home Manager.
       # hyprcursor

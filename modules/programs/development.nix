@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     # ------ developpement ------
     zip
@@ -10,7 +10,6 @@
     glibc
     */
     #TODO: add a condition later for graphical machines only
-    xdg-utils
     appimage-run
     steam-run
   ];
