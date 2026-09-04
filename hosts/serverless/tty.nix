@@ -33,25 +33,5 @@
     '';
   };
 
-  services.getty.helpLine = ''
-    Serverless TTY
-      ll      list files
-      ff      system summary
-      disks   disk usage
-      space   directory sizes
-      mux     terminal workspace
-  '';
-  programs.autojump.enable = true;
-
-  programs.zsh.shellAliases = {
-    cat = "bat";
-    disks = "duf";
-    ff = "fastfetch";
-    grep = "rg";
-    ll = "eza -lah --git --group-directories-first";
-    ls = "eza --group-directories-first";
-    mux = "tmux";
-    space = "dust";
-    top = "btop";
-  };
+  services.getty.helpLine = "Serverless TTY";
 }
