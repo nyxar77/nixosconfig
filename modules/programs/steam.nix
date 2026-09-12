@@ -12,7 +12,7 @@ lib.mkIf config.nyx.services.steam.enable {
       extraEnv = {
         MANGOHUD = true;
         OBS_VKCAPTURE = true;
-        RADV_TEX_ANISO = 16;
+        RADV_TEX_ANISO = 8;
       };
     };
   };
