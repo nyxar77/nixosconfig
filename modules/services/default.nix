@@ -1,4 +1,4 @@
-{...}: {
+{
   imports = [
     ./apache.nix
     ./fingerprint.nix

@@ -1,4 +1,4 @@
-{...}: {
+{
   # Previous CPU-only power management, kept for reference.
 
   /*

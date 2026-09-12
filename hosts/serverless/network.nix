@@ -1,4 +1,4 @@
-{...}: {
+{
   programs.mtr.enable = true;
 
   services.dnscrypt-proxy = {

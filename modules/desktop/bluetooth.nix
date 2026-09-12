@@ -1,3 +1,3 @@
-{...}: {
+{
   hardware.bluetooth.enable = true;
 }

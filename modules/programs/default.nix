@@ -1,4 +1,4 @@
-{ ... }: {
+{
   imports = [
     ./capture-tools.nix
     ./desktop-tools.nix
