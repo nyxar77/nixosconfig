@@ -1,12 +1,24 @@
-{...}: {
+{
   services.keyd = {
     enable = true;
     keyboards = {
       default = {
-        ids = ["*"];
+        ids = [ "*" ];
         settings = {
           main = {
-            capslock = "overload(control, esc)";
+            capslock = "leftcontrol";
+            grave = "esc";
+            esc = "layer(nav)";
+          };
+          nav = {
+            h = "left";
+            j = "down";
+            k = "up";
+            l = "right";
+            u = "home";
+            o = "end";
+            i = "pageup";
+            comma = "pagedown";
           };
         };
       };
