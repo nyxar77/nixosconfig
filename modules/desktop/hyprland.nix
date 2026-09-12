@@ -70,6 +70,7 @@ in
         xdgOpenUsePortal = true;
 
         extraPortals = with pkgs; [
+          xdg-desktop-portal-gnome
           xdg-desktop-portal-gtk
           # xdg-desktop-portal-wlr
         ];
@@ -78,6 +79,7 @@ in
           common = {
             default = [
               "hyprland"
+              "gnome"
               "gtk"
             ];
 
@@ -85,13 +87,14 @@ in
             "org.freedesktop.impl.portal.Screenshot" = ["hyprland"];
             "org.freedesktop.impl.portal.GlobalShortcuts" = ["hyprland"];
 
-            "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
-            "org.freedesktop.impl.portal.AppChooser" = ["gtk"];
+            "org.freedesktop.impl.portal.FileChooser" = ["gnome" "gtk"];
+            "org.freedesktop.impl.portal.AppChooser" = ["gnome" "gtk"];
           };
 
           hyprland = {
             default = [
               "hyprland"
+              "gnome"
               "gtk"
             ];
 
@@ -99,8 +102,8 @@ in
             "org.freedesktop.impl.portal.Screenshot" = ["hyprland"];
             "org.freedesktop.impl.portal.GlobalShortcuts" = ["hyprland"];
 
-            "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
-            "org.freedesktop.impl.portal.AppChooser" = ["gtk"];
+            "org.freedesktop.impl.portal.FileChooser" = ["gnome" "gtk"];
+            "org.freedesktop.impl.portal.AppChooser" = ["gnome" "gtk"];
           };
         };
       };
