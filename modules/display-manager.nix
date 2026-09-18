@@ -26,10 +26,10 @@ in {
         settings = {
           load = true;
           save = true;
-          bg = pkgs.fetchurl {
+          bg = toString (pkgs.fetchurl {
             url = "https://raw.githubusercontent.com/nyxar77/homeconfig/refs/heads/master/assets/Wallpapers/purple-pixel-art-wallpapers.jpg";
             hash = "sha256-9LFJ6XDeeOkz1XWGXyc7miobNKe+0aK6wW15Ur+O4Us=";
-          };
+          });
         };
       };
     })
