@@ -49,6 +49,10 @@
 
       flake = let
         hostSystem = "x86_64-linux";
+        hostNames = {
+          workstation = "nixos";
+          server = "serverless";
+        };
         mkPkgs = system:
           import nixpkgs {
             inherit system;
@@ -75,12 +79,16 @@
                 [
                   ./hosts/${name}
                   ./modules/options.nix
+                  inputs.sops-nix.nixosModules.sops
+                  {
+                    nyx.host.name = name;
+                  }
                 ]
                 ++ extraModules;
 
               specialArgs =
                 {
-                  inherit inputs;
+                  inherit inputs hostNames;
                 }
                 // specialArgs;
             }
@@ -93,12 +101,10 @@
         pkgs = mkPkgs hostSystem;
       in {
         nixosConfigurations = {
-          nixos = mkHost {
-            name = "nixos";
+          ${hostNames.workstation} = mkHost {
+            name = hostNames.workstation;
             inherit pkgs;
             extraModules = [
-              inputs.sops-nix.nixosModules.sops
-
               /*
                  inputs.chaotic.nixosModules.nyx-cache
               inputs.chaotic.nixosModules.nyx-overlay
@@ -107,8 +113,8 @@
             ];
           };
 
-          serverless = mkHost {
-            name = "serverless";
+          ${hostNames.server} = mkHost {
+            name = hostNames.server;
           };
         };
       };

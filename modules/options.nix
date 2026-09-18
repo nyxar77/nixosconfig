@@ -1,10 +1,11 @@
 {
+  config,
+  hostNames,
   lib,
   ...
 }:
 let
-  machines = ["nixos" "serverless"];
-  roles = ["workstation" "server"];
+  machines = builtins.attrValues hostNames;
   desktopSessions = ["hyprland" "plasma"];
   displayManagers = ["none" "ly" "sddm"];
 in {
@@ -14,12 +15,6 @@ in {
         type = lib.types.enum machines;
         default = "serverless";
         description = "Host name managed by this flake.";
-      };
-
-      role = lib.mkOption {
-        type = lib.types.enum roles;
-        default = "server";
-        description = "High-level machine role used by local modules.";
       };
     };
 
@@ -51,7 +46,26 @@ in {
       };
     };
 
+    network.hosts.serverless.ipv4 = lib.mkOption {
+      type = lib.types.str;
+      default = "192.168.1.50";
+      description = "Static LAN IPv4 address of the serverless host.";
+    };
+
+    network.hosts.serverless.lanInterface = lib.mkOption {
+      type = lib.types.str;
+      default = "enp1s0";
+      description = "LAN interface of the serverless host.";
+    };
+
+    network.wireguard.enable = lib.mkEnableOption "the private WireGuard network";
+
     services = {
+      attic = {
+        enable = lib.mkEnableOption "the local Attic binary cache client";
+        server = lib.mkEnableOption "hosting the local Attic binary cache";
+      };
+
       web.enable = lib.mkEnableOption "local Apache/PHP web hosting";
       mysql.enable = lib.mkEnableOption "MariaDB service";
       steam.enable = lib.mkEnableOption "Steam and gaming runtime support";
@@ -61,4 +75,5 @@ in {
     };
   };
 
+  config.networking.hostName = config.nyx.host.name;
 }

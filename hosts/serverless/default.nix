@@ -7,9 +7,11 @@
     ./users.nix
     ./hardware-configuration.nix
     ./network.nix
+    ./secrets.nix
     ./memory.nix
     ./tty.nix
     ../../modules/profiles/server.nix
+    ../../modules/services/attic.nix
     ../../modules/services/scx.nix
   ];
 
@@ -22,14 +24,14 @@
   };
 
   nyx = {
-    host = {
-      name = "serverless";
-      role = "server";
-    };
-
     desktop.enable = false;
     displayManager = "ly";
     hardware.fingerprint = false;
+
+    services.attic = {
+      enable = true;
+      server = true;
+    };
   };
 
   nixpkgs.config.allowUnfreePredicate = pkg:

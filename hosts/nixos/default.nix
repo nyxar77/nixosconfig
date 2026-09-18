@@ -14,11 +14,6 @@
   ];
 
   nyx = {
-    host = {
-      name = "nixos";
-      role = "workstation";
-    };
-
     desktop = {
       enable = true;
       session = "hyprland";
@@ -29,6 +24,7 @@
     hardware.fingerprint = true;
 
     services = {
+      attic.enable = true;
       mysql.enable = false;
       steam.enable = true;
       syncthing.enable = true;

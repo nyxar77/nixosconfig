@@ -7,5 +7,6 @@
     ./shells.nix
     ./terminal.nix
     ../display-manager.nix
+    ../optional/wireguard.nix
   ];
 }

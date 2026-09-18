@@ -1,4 +1,11 @@
 {
+  config,
+  hostNames,
+  ...
+}:
+let
+  serverlessAddress = config.nyx.network.hosts.serverless.ipv4;
+in {
   programs.mtr.enable = true;
 
   services.dnscrypt-proxy = {
@@ -33,15 +40,8 @@
   };
 
   networking = {
-    hostName = "nixos";
-
     hosts = {
-      "192.168.1.50" = ["serverless"];
-    };
-
-    nat = {
-      enable = true;
-      internalInterfaces = ["wg0"];
+      "${serverlessAddress}" = [hostNames.server];
     };
 
     networkmanager = {
@@ -62,20 +62,18 @@
     firewall = {
       enable = true;
       allowedTCPPorts = [
-        4242
-        44562
-        51413
-        51820
-        80
-        443
+        # 80 # Local web server
+        # 443 # Local web server
+        # 4242
+        # 44562
+        # 51413 # BitTorrent
       ];
       allowedUDPPorts = [
-        80
-        443
-        4242
-        51413
-        44562
-        51820
+        # 80
+        # 443
+        # 4242
+        # 44562
+        # 51413 # BitTorrent
       ];
     };
   };

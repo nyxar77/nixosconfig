@@ -1,4 +1,7 @@
-{
+{config, ...}:
+let
+  lanInterface = config.nyx.network.hosts.serverless.lanInterface;
+in {
   programs.mtr.enable = true;
 
   services.dnscrypt-proxy = {
@@ -33,8 +36,6 @@
   };
 
   networking = {
-    hostName = "serverless";
-
     networkmanager = {
       enable = true;
       dns = "none";
@@ -50,11 +51,11 @@
       };
     };
 
-    interfaces.enp1s0 = {
+    interfaces.${lanInterface} = {
       useDHCP = false;
       ipv4.addresses = [
         {
-          address = "192.168.1.50";
+          address = config.nyx.network.hosts.serverless.ipv4;
           prefixLength = 24;
         }
       ];
@@ -64,22 +65,16 @@
 
     defaultGateway = {
       address = "192.168.1.1";
-      interface = "enp1s0";
-    };
-
-    nat = {
-      enable = true;
-      internalInterfaces = ["wg0"];
+      interface = lanInterface;
     };
 
     firewall = {
       enable = true;
       allowedTCPPorts = [];
-      allowedUDPPorts = [
-        51820
-      ];
+      allowedUDPPorts = [];
       allowedUDPPortRanges = [
         {
+          # Mosh
           from = 60000;
           to = 60004;
         }
