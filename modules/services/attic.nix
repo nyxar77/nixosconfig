@@ -61,13 +61,8 @@ let
     exec ${lib.getExe pkgs.attic-client} push ${cacheName} /run/current-system
   '';
 
-  watchStore = pkgs.writeShellScript "attic-watch-store" ''
-    while ! ${lib.getExe pkgs.curl} --fail --silent --connect-timeout 2 \
-      ${serverEndpoint}_api/v1/cache-config/${cacheName} >/dev/null; do
-      ${lib.getExe' pkgs.coreutils "sleep"} 30
-    done
-
-    exec ${lib.getExe pkgs.attic-client} watch-store ${cacheName}
+  configureNixCache = pkgs.writeShellScriptBin "attic-configure-cache" ''
+    exec ${lib.getExe' pkgs.systemd "systemctl"} start attic-cache-config.service
   '';
 in
 lib.mkIf cfg.enable (lib.mkMerge [
@@ -79,11 +74,12 @@ lib.mkIf cfg.enable (lib.mkMerge [
 
     environment.systemPackages = [
       pkgs.attic-client
+      configureNixCache
       pushCurrentSystem
     ];
 
     # The cache signing key is generated when Attic creates the cache. A
-    # small service below writes this optional include after discovering it.
+    # manually started service writes this optional include after discovering it.
     nix.extraOptions = ''
       !include ${nixCacheConfig}
     '';
@@ -98,7 +94,6 @@ lib.mkIf cfg.enable (lib.mkMerge [
 
     systemd.services.attic-cache-config = {
       description = "Discover the LAN Attic cache signing key";
-      wantedBy = ["multi-user.target"];
       wants = ["network-online.target"];
       after = ["network-online.target"] ++ lib.optionals cfg.server ["attic-init.service"];
 
@@ -113,8 +108,8 @@ lib.mkIf cfg.enable (lib.mkMerge [
       script = ''
         if ! response="$(curl --fail --silent --show-error --connect-timeout 2 \
           ${serverEndpoint}_api/v1/cache-config/${cacheName})"; then
-          echo "Attic is unavailable; keeping the existing Nix cache configuration."
-          exit 0
+          echo "Attic is unavailable; the Nix cache configuration was not changed." >&2
+          exit 1
         fi
 
         public_key="$(printf '%s' "$response" | jq --exit-status --raw-output '.public_key')"
@@ -133,43 +128,6 @@ lib.mkIf cfg.enable (lib.mkMerge [
       '';
     };
 
-    systemd.timers.attic-cache-config = {
-      description = "Periodically refresh the LAN Attic cache configuration";
-      wantedBy = ["timers.target"];
-      timerConfig = {
-        OnBootSec = "1min";
-        OnUnitActiveSec = "5min";
-        RandomizedDelaySec = "30s";
-        Persistent = true;
-      };
-    };
-
-    systemd.services.attic-watch-store = {
-      description = "Upload new Nix store paths to the LAN Attic cache";
-      wantedBy = ["multi-user.target"];
-      wants = ["network-online.target"];
-      after =
-        ["network-online.target"]
-        ++ lib.optionals cfg.server ["attic-init.service"];
-
-      unitConfig.ConditionPathExists = tokenFile;
-      serviceConfig = {
-        ExecStart = watchStore;
-        Environment = "XDG_CONFIG_HOME=${atticClientConfig}";
-        Restart = "on-failure";
-        RestartSec = 10;
-        UMask = "0077";
-      };
-    };
-
-    systemd.paths.attic-watch-store = {
-      description = "Start the Attic uploader when its token is installed";
-      wantedBy = ["multi-user.target"];
-      pathConfig = {
-        PathExists = tokenFile;
-        Unit = "attic-watch-store.service";
-      };
-    };
   }
 
   (lib.mkIf cfg.server {

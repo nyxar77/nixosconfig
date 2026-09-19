@@ -4,6 +4,7 @@
   ...
 }: {
   imports = [
+    ./disko.nix
     ./users.nix
     ./hardware-configuration.nix
     ./network.nix

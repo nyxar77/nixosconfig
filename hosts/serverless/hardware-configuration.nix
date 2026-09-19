@@ -15,28 +15,6 @@
   boot.initrd.kernelModules = [];
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
-  fileSystems."/boot/efi" = {
-    device = "/dev/disk/by-uuid/3AB5-3277";
-    fsType = "vfat";
-  };
-
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/5d5e72c3-be82-4252-98f9-0ae7d50eaf23";
-    fsType = "ext4";
-  };
-
-  fileSystems."/nix" = {
-    device = "/dev/disk/by-uuid/c00271d3-464e-48ad-ac91-3f9c597bea7e";
-    fsType = "ext4";
-  };
-
-  fileSystems."/home" = {
-    device = "/dev/disk/by-uuid/27bac267-bfee-4d29-a4c1-bf766f2e3c43";
-    fsType = "ext4";
-  };
-
-  swapDevices = [];
-
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

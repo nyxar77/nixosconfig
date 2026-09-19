@@ -22,6 +22,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     hyprland-guiutils = {
       url = "github:hyprwm/hyprland-guiutils";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -115,6 +120,7 @@
 
           ${hostNames.server} = mkHost {
             name = hostNames.server;
+            extraModules = [inputs.disko.nixosModules.disko];
           };
         };
       };

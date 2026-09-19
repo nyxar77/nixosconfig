@@ -1,4 +1,10 @@
 {pkgs, ...}: {
+  services.openssh.settings = {
+    PasswordAuthentication = false;
+    KbdInteractiveAuthentication = false;
+    PermitRootLogin = "no";
+  };
+
   users = {
     defaultUserShell = pkgs.zsh;
     users.nyxar = {
