@@ -12,7 +12,9 @@
     ./memory.nix
     ./tty.nix
     ../../modules/profiles/server.nix
+    ../../modules/optional/remote-builder.nix
     ../../modules/services/attic.nix
+    ../../modules/services/immich.nix
     ../../modules/services/scx.nix
   ];
 
@@ -28,11 +30,13 @@
     desktop.enable = false;
     displayManager = "ly";
     hardware.fingerprint = false;
+    network.tailscale.enable = true;
 
     services.attic = {
       enable = true;
       server = true;
     };
+    services.immich.enable = true;
   };
 
   nixpkgs.config.allowUnfreePredicate = pkg:
@@ -48,8 +52,21 @@
   };
 
   powerManagement.cpuFreqGovernor = "performance";
-  services.thermald.enable = true;
-  services.irqbalance.enable = true;
+  services = {
+    irqbalance.enable = true;
+    thermald.enable = true;
+
+    logind.settings.Login = {
+      HandleLidSwitch = "ignore";
+      HandleLidSwitchExternalPower = "ignore";
+      HandleLidSwitchDocked = "ignore";
+    };
+
+    smartd = {
+      enable = true;
+      autodetect = true;
+    };
+  };
 
   system.stateVersion = "24.11";
 }

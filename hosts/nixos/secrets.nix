@@ -24,6 +24,12 @@
       mode = "0600";
     };
 
+    secrets.ssh-remote-builder = {
+      owner = "root";
+      group = "root";
+      mode = "0400";
+    };
+
     secrets.syncthing-gui-password = {
       owner = "nyxar";
       group = "users";

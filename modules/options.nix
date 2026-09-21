@@ -58,7 +58,10 @@ in {
       description = "LAN interface of the serverless host.";
     };
 
-    network.wireguard.enable = lib.mkEnableOption "the private WireGuard network";
+    network = {
+      tailscale.enable = lib.mkEnableOption "Tailscale private networking";
+      wireguard.enable = lib.mkEnableOption "the private WireGuard network";
+    };
 
     services = {
       attic = {
@@ -66,6 +69,7 @@ in {
         server = lib.mkEnableOption "hosting the local Attic binary cache";
       };
 
+      immich.enable = lib.mkEnableOption "the Immich photo and video library";
       web.enable = lib.mkEnableOption "local Apache/PHP web hosting";
       mysql.enable = lib.mkEnableOption "MariaDB service";
       steam.enable = lib.mkEnableOption "Steam and gaming runtime support";

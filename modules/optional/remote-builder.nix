@@ -1,14 +1,13 @@
-# Import this module only after adding files/remotebuild.pub.
 {
   users.users.remotebuild = {
     isSystemUser = true;
     group = "remotebuild";
     useDefaultShell = true;
 
-    openssh.authorizedKeys.keyFiles = [../../files/remotebuild.pub];
+    openssh.authorizedKeys.keyFiles = [ ../../files/remotebuild.pub ];
   };
 
-  users.groups.remotebuild = {};
+  users.groups.remotebuild = { };
 
-  nix.settings.trusted-users = ["remotebuild"];
+  nix.settings.trusted-users = [ "remotebuild" ];
 }

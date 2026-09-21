@@ -38,7 +38,7 @@ let
     database.url = "sqlite:///var/lib/atticd/server.db?mode=rwc";
     storage = {
       type = "local";
-      path = "/var/lib/atticd/storage";
+      path = "/srv/atticd/storage";
     };
     chunking = {
       nar-size-threshold = 65536;
@@ -47,6 +47,10 @@ let
       max-size = 262144;
     };
     compression.type = "zstd";
+    garbage-collection = {
+      interval = "1 day";
+      default-retention-period = "1 year";
+    };
   };
 
   atticServerConfig = (pkgs.formats.toml { }).generate "attic-server.toml" atticServerSettings;
@@ -142,6 +146,22 @@ lib.mkIf cfg.enable (lib.mkMerge [
       enable = true;
       environmentFile = atticEnvironmentFile;
       settings = atticServerSettings;
+    };
+
+    users = {
+      groups.atticd = { };
+      users.atticd = {
+        isSystemUser = true;
+        group = "atticd";
+      };
+    };
+
+    systemd = {
+      services.atticd.serviceConfig.DynamicUser = lib.mkForce false;
+      tmpfiles.rules = [
+        "d /srv/atticd 0700 atticd atticd -"
+        "d /srv/atticd/storage 0700 atticd atticd -"
+      ];
     };
 
     sops = {

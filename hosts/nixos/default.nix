@@ -1,8 +1,10 @@
 {
   config,
+  hostNames,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     ./users.nix
     ./hardware-configuration.nix
@@ -23,6 +25,8 @@
 
     hardware.fingerprint = true;
 
+    network.tailscale.enable = false;
+
     services = {
       attic.enable = true;
       mysql.enable = false;
@@ -33,16 +37,45 @@
     };
   };
 
-  environment.pathsToLink = ["/share/zsh"];
+  nix = {
+    distributedBuilds = true;
+    buildMachines = [
+      {
+        hostName = hostNames.server;
+        protocol = "ssh-ng";
+        system = "x86_64-linux";
+        sshUser = "remotebuild";
+        sshKey = config.sops.secrets.ssh-remote-builder.path;
+        maxJobs = 1;
+        supportedFeatures = [
+          "nixos-test"
+          "benchmark"
+          "big-parallel"
+          "kvm"
+        ];
+      }
+    ];
+    settings.builders-use-substitutes = true;
+  };
+
+  programs.ssh.knownHosts.${hostNames.server} = {
+    hostNames = [
+      hostNames.server
+      config.nyx.network.hosts.serverless.ipv4
+    ];
+    publicKeyFile = ../../files/serverless-host.pub;
+  };
+
+  environment.pathsToLink = [ "/share/zsh" ];
   boot = {
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    initrd.kernelModules = ["amdgpu"];
+    initrd.kernelModules = [ "amdgpu" ];
     kernelPackages = pkgs.linuxPackages_zen;
     # kernelPackages = pkgs.linuxPackages_cachyos;
-    extraModulePackages = with config.boot.kernelPackages; [v4l2loopback];
+    extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
     extraModprobeConfig = ''
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
 
@@ -57,8 +90,8 @@
     enable = true;
     enable32Bit = true;
     /*
-       extraPackages = with pkgs; [amdvlk];
-    extraPackages32 = [pkgs.driversi686Linux.amdvlk];
+         extraPackages = with pkgs; [amdvlk];
+      extraPackages32 = [pkgs.driversi686Linux.amdvlk];
     */
   };
 

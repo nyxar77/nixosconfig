@@ -14,7 +14,7 @@
               type = "filesystem";
               format = "vfat";
               mountpoint = "/boot/efi";
-              mountOptions = ["umask=0077"];
+              mountOptions = [ "umask=0077" ];
             };
           };
 
@@ -33,12 +33,15 @@
       type = "lvm_vg";
       lvs = {
         root = {
-          size = "64G";
+          size = "40G";
           content = {
             type = "filesystem";
             format = "ext4";
             mountpoint = "/";
-            extraArgs = ["-m" "1"];
+            extraArgs = [
+              "-m"
+              "1"
+            ];
           };
         };
 
@@ -48,28 +51,37 @@
             type = "filesystem";
             format = "ext4";
             mountpoint = "/nix";
-            mountOptions = ["noatime"];
-            extraArgs = ["-m" "0"];
+            mountOptions = [ "noatime" ];
+            extraArgs = [
+              "-m"
+              "0"
+            ];
           };
         };
 
         home = {
-          size = "32G";
+          size = "20G";
           content = {
             type = "filesystem";
             format = "ext4";
             mountpoint = "/home";
-            extraArgs = ["-m" "0"];
+            extraArgs = [
+              "-m"
+              "0"
+            ];
           };
         };
 
         services = {
-          size = "128G";
+          size = "250G";
           content = {
             type = "filesystem";
             format = "ext4";
             mountpoint = "/srv";
-            extraArgs = ["-m" "0"];
+            extraArgs = [
+              "-m"
+              "0"
+            ];
           };
         };
 
