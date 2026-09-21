@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   fonts = {
     # Oui : fournit DejaVu, Liberation, CJK, emoji, Unifont, etc.
     enableDefaultPackages = true;
@@ -14,6 +14,7 @@
       jetbrains-mono
 
       nerd-fonts.symbols-only
+      departure-mono
     ];
 
     fontconfig = {
