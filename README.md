@@ -1,16 +1,15 @@
-# nixos config
+# NixOS configuration
 
-my config for my laptop and server :)
+My personal NixOS flake for a laptop and homelab server.
 
-- `nixos` is the laptop
-- `serverless` is the homelab
+## Hosts
 
-## Secrets
+- `nixos`: laptop and daily workstation
+- `serverless`: homelab server
 
-secrets are encrypted with sops. the private key is at:
+## Layout
 
-```text
-/var/lib/sops-nix/key.txt
-```
-
-don't lose it ;)
+- `hosts/` contains machine-specific configuration
+- `modules/` contains shared profiles, programs, and services
+- `secrets/` contains secrets encrypted with SOPS
+- `files/` and `assets/` contain static files used by the configuration
