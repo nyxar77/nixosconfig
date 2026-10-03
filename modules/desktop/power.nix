@@ -1,26 +1,4 @@
 {
-  # Previous CPU-only power management, kept for reference.
-
-  /*
-     services = {
-    power-profiles-daemon.enable = false;
-    tlp.enable = false;
-    auto-cpufreq = {
-      enable = true;
-      settings = {
-        battery = {
-          governor = "powersave";
-          turbo = "never";
-        };
-        charger = {
-          governor = "performance";
-          turbo = "auto";
-        };
-      };
-    };
-  };
-  */
-
   powerManagement.powertop.enable = false;
 
   services = {
@@ -45,8 +23,8 @@
         CPU_ENERGY_PERF_POLICY_ON_SAV = "power";
 
         CPU_BOOST_ON_AC = 1;
-        CPU_BOOST_ON_BAT = 1;
-        CPU_BOOST_ON_SAV = 1;
+        CPU_BOOST_ON_BAT = 0;
+        CPU_BOOST_ON_SAV = 0;
 
         AMDGPU_ABM_LEVEL_ON_AC = 0;
         AMDGPU_ABM_LEVEL_ON_BAT = 0;
@@ -63,7 +41,7 @@
         WOL_DISABLE = "Y";
 
         WIFI_PWR_ON_AC = "off";
-        WIFI_PWR_ON_BAT = "off";
+        WIFI_PWR_ON_BAT = "on";
         WIFI_PWR_ON_SAV = "on";
 
         # RUNTIME_PM_DRIVER_DENYLIST = "mei_me nouveau radeon xhci_hcd rtw89_8852ae";
