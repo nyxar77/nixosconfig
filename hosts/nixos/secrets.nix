@@ -35,5 +35,12 @@
       group = "users";
       mode = "0400";
     };
+
+    secrets.wifi-hotspot-password = {
+      sopsFile = ../../secrets/hotspot.yaml;
+      owner = "root";
+      group = "root";
+      mode = "0400";
+    };
   };
 }

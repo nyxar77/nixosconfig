@@ -7,6 +7,10 @@ creation_rules:
     key_groups:
       - age:
           - *nixos
+  - path_regex: secrets/hotspot\.yaml$
+    key_groups:
+      - age:
+          - *nixos
   - path_regex: secrets/attic\.yaml$
     key_groups:
       - age:
