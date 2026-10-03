@@ -87,17 +87,22 @@ lib.mkIf cfg.enable (lib.mkMerge [
     nix.extraOptions = ''
       !include ${nixCacheConfig}
     '';
-    nix.settings = {
-      connect-timeout = 2;
-      fallback = true;
-    };
-
     systemd.tmpfiles.rules = [
       "d /var/lib/attic-client 0755 root root -"
     ];
 
+    systemd.timers.attic-cache-config = {
+      description = "Periodically discover the LAN Attic cache";
+      wantedBy = ["timers.target"];
+      timerConfig = {
+        OnBootSec = "30s";
+        OnUnitActiveSec = "1min";
+        Unit = "attic-cache-config.service";
+      };
+    };
+
     systemd.services.attic-cache-config = {
-      description = "Discover the LAN Attic cache signing key";
+      description = "Reconcile the LAN Attic cache configuration";
       wants = ["network-online.target"];
       after = ["network-online.target"] ++ lib.optionals cfg.server ["attic-init.service"];
 
@@ -110,13 +115,24 @@ lib.mkIf cfg.enable (lib.mkMerge [
 
       serviceConfig.Type = "oneshot";
       script = ''
-        if ! response="$(curl --fail --silent --show-error --connect-timeout 2 \
+        cache_available=false
+        if response="$(curl --fail --silent --show-error --connect-timeout 2 --max-time 5 \
           ${serverEndpoint}_api/v1/cache-config/${cacheName})"; then
-          echo "Attic is unavailable; the Nix cache configuration was not changed." >&2
-          exit 1
+          if public_key="$(printf '%s' "$response" | jq --exit-status --raw-output \
+            '.public_key | select(type == "string" and length > 0)')"; then
+            cache_available=true
+          fi
         fi
 
-        public_key="$(printf '%s' "$response" | jq --exit-status --raw-output '.public_key')"
+        if ! "$cache_available"; then
+          if [ -e ${nixCacheConfig} ]; then
+            rm -f ${nixCacheConfig}
+            systemctl try-restart nix-daemon.service
+            echo "Attic is unavailable; removed it from the Nix substituters."
+          fi
+          exit 0
+        fi
+
         temporary="$(mktemp /var/lib/attic-client/nix.conf.XXXXXX)"
         printf 'extra-substituters = ${serverEndpoint}${cacheName}\nextra-trusted-public-keys = %s\n' \
           "$public_key" > "$temporary"
