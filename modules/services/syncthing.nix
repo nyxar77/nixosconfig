@@ -75,6 +75,7 @@ lib.mkIf config.nyx.services.syncthing.enable {
             "Notes" = {
               id = "Notes-sync";
               path = "${userDir}/Documents/Notes";
+              inherit devices;
 
             };
           };
