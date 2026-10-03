@@ -8,6 +8,5 @@
     ./mail.nix
     ./nix-ld.nix
     ./steam.nix
-    ./wifi-tools.nix
   ];
 }
