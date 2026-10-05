@@ -55,14 +55,209 @@ let
 
   atticServerConfig = (pkgs.formats.toml { }).generate "attic-server.toml" atticServerSettings;
 
-  pushCurrentSystem = pkgs.writeShellScriptBin "attic-push-system" ''
+  atticPushPrelude = ''
+    set -euo pipefail
+  '';
+
+  atticPushEnvironment = ''
     if [ ! -r ${tokenFile} ]; then
       echo "Missing Attic upload token at ${tokenFile}." >&2
+      echo "Run this command with sudo." >&2
       exit 1
     fi
 
     export XDG_CONFIG_HOME=${atticClientConfig}
-    exec ${lib.getExe pkgs.attic-client} push ${cacheName} /run/current-system
+  '';
+
+  parseAtticPushArguments = ''
+    print_attic_push_usage() {
+      local user_argument=""
+      if [ "$1" = true ]; then
+        user_argument=" [USER]"
+      fi
+
+      cat <<EOF
+    Usage: $0 [OPTIONS]$user_argument
+
+    Options:
+      -j, --jobs JOBS                 Maximum parallel uploads (default: 1)
+          --ignore-upstream-cache-filter
+                                      Upload paths even when available upstream
+      -h, --help                      Show this help
+    EOF
+    }
+
+    parse_attic_push_arguments() {
+      local accepts_user="$1"
+      shift
+
+      local jobs=1
+      local -a extra_options=()
+      attic_push_user_arguments=()
+
+      while [ "$#" -gt 0 ]; do
+        case "$1" in
+          -j | --jobs)
+            if [ "$#" -lt 2 ]; then
+              echo "Missing value for $1." >&2
+              print_attic_push_usage "$accepts_user" >&2
+              return 64
+            fi
+            jobs="$2"
+            shift 2
+            ;;
+          --jobs=*)
+            jobs="''${1#*=}"
+            shift
+            ;;
+          --ignore-upstream-cache-filter)
+            extra_options+=("$1")
+            shift
+            ;;
+          -h | --help)
+            print_attic_push_usage "$accepts_user"
+            exit 0
+            ;;
+          --)
+            shift
+            break
+            ;;
+          -*)
+            echo "Unknown option: $1" >&2
+            print_attic_push_usage "$accepts_user" >&2
+            return 64
+            ;;
+          *)
+            break
+            ;;
+        esac
+      done
+
+      case "$jobs" in
+        "" | *[!0-9]* | 0)
+          echo "JOBS must be a positive integer, got: $jobs" >&2
+          return 64
+          ;;
+      esac
+
+      if [ "$accepts_user" = true ]; then
+        if [ "$#" -gt 1 ]; then
+          echo "Only one Home Manager user may be specified." >&2
+          print_attic_push_usage "$accepts_user" >&2
+          return 64
+        fi
+        attic_push_user_arguments=("$@")
+      elif [ "$#" -ne 0 ]; then
+        echo "This command does not accept a user argument." >&2
+        print_attic_push_usage "$accepts_user" >&2
+        return 64
+      fi
+
+      attic_push_options=(--jobs "$jobs" "''${extra_options[@]}")
+    }
+  '';
+
+  resolveHomeManagerProfile = ''
+    resolve_home_manager_profile() {
+      if [ "$#" -gt 1 ]; then
+        echo "Usage: $0 [USER]" >&2
+        return 64
+      fi
+
+      local user_name
+      if [ "$#" -eq 1 ]; then
+        user_name="$1"
+      elif [ -n "''${SUDO_USER:-}" ] && [ "''${SUDO_USER}" != "root" ]; then
+        user_name="''${SUDO_USER}"
+      else
+        echo "Cannot determine the Home Manager user." >&2
+        echo "Run through sudo from that user, or pass the user name explicitly." >&2
+        return 64
+      fi
+
+      case "$user_name" in
+        "" | root | *[!a-zA-Z0-9._-]*)
+          echo "Refusing invalid Home Manager user: $user_name" >&2
+          return 64
+          ;;
+      esac
+
+      local passwd_entry uid home_directory profile resolved
+      if ! passwd_entry="$(${lib.getExe pkgs.getent} passwd "$user_name")"; then
+        echo "No local account exists for Home Manager user: $user_name" >&2
+        return 1
+      fi
+
+      IFS=: read -r _ _ uid _ _ home_directory _ <<< "$passwd_entry"
+      case "$uid" in
+        "" | 0 | *[!0-9]*)
+          echo "Refusing invalid account details for Home Manager user: $user_name" >&2
+          return 1
+          ;;
+      esac
+      case "$home_directory" in
+        /*) ;;
+        *)
+          echo "Refusing invalid home directory for Home Manager user: $user_name" >&2
+          return 1
+          ;;
+      esac
+
+      profile="$home_directory/.local/state/nix/profiles/home-manager"
+      if [ ! -e "$profile" ]; then
+        echo "No active standalone Home Manager profile exists at $profile" >&2
+        return 1
+      fi
+
+      if ! resolved="$(${lib.getExe' pkgs.coreutils "readlink"} -e -- "$profile")"; then
+        echo "Cannot resolve Home Manager profile: $profile" >&2
+        return 1
+      fi
+
+      case "$resolved" in
+        /nix/store/*-home-manager-generation)
+          printf '%s\n' "$resolved"
+          ;;
+        *)
+          echo "Refusing unexpected Home Manager profile target: $resolved" >&2
+          return 1
+          ;;
+      esac
+    }
+  '';
+
+  pushCurrentSystem = pkgs.writeShellScriptBin "attic-push-system" ''
+    ${atticPushPrelude}
+    ${parseAtticPushArguments}
+
+    parse_attic_push_arguments false "$@"
+    ${atticPushEnvironment}
+    exec ${lib.getExe pkgs.attic-client} push "''${attic_push_options[@]}" \
+      ${cacheName} /run/current-system
+  '';
+
+  pushCurrentHome = pkgs.writeShellScriptBin "attic-push-home" ''
+    ${atticPushPrelude}
+    ${parseAtticPushArguments}
+    ${resolveHomeManagerProfile}
+
+    parse_attic_push_arguments true "$@"
+    ${atticPushEnvironment}
+    home_manager_profile="$(resolve_home_manager_profile "''${attic_push_user_arguments[@]}")"
+    exec ${lib.getExe pkgs.attic-client} push "''${attic_push_options[@]}" \
+      ${cacheName} "$home_manager_profile"
+  '';
+
+  pushCurrentSystemAndHome = pkgs.writeShellScriptBin "attic-push-all" ''
+    ${atticPushPrelude}
+    ${parseAtticPushArguments}
+    ${resolveHomeManagerProfile}
+
+    parse_attic_push_arguments true "$@"
+    ${atticPushEnvironment}
+    home_manager_profile="$(resolve_home_manager_profile "''${attic_push_user_arguments[@]}")"
+    exec ${lib.getExe pkgs.attic-client} push "''${attic_push_options[@]}" ${cacheName} \
+      /run/current-system "$home_manager_profile"
   '';
 
   configureNixCache = pkgs.writeShellScriptBin "attic-configure-cache" ''
@@ -79,6 +274,8 @@ lib.mkIf cfg.enable (lib.mkMerge [
     environment.systemPackages = [
       pkgs.attic-client
       configureNixCache
+      pushCurrentHome
+      pushCurrentSystemAndHome
       pushCurrentSystem
     ];
 
