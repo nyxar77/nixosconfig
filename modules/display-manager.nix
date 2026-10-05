@@ -41,6 +41,7 @@ in
           load = true;
           save = true;
           animation = "dur_file";
+          full_color = true;
           dur_file_path = toString (
             pkgs.fetchurl {
               url = "https://raw.githubusercontent.com/nyxar77/homeconfig/refs/heads/master/assets/animated/blackhole-smooth.dur";
