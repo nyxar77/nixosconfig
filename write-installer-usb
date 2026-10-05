@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+target_id="${1:-}"
+
+die() {
+  printf 'error: %s\n' "$*" >&2
+  exit 1
+}
+
+if [[ "$(id -u)" -ne 0 ]]; then
+  die "run as root: sudo $0 usb-..."
+fi
+
+target_id="${target_id#/dev/disk/by-id/}"
+[[ -n "$target_id" && "$target_id" != */* ]] || die "supply one USB ID from /dev/disk/by-id"
+[[ "$target_id" != *-part* ]] || die "supply the whole USB, not a partition"
+target="/dev/disk/by-id/$target_id"
+[[ -b "$target" ]] || die "$target is not a block device"
+[[ "$(lsblk -dn -o TYPE -- "$target")" == disk ]] || die "$target is not a whole disk"
+
+transport="$(lsblk -dn -o TRAN -- "$target")"
+[[ "$transport" == usb ]] || die "$target is not reported as a USB device"
+
+mapfile -t images < <(find "$repo/result/iso" -maxdepth 1 -type f -name '*.iso' -print)
+[[ "${#images[@]}" -eq 1 ]] || die "expected exactly one ISO under $repo/result/iso"
+image="${images[0]}"
+
+printf 'Image:\n  %s\n' "$image"
+printf 'Target:\n'
+lsblk -d -o NAME,SIZE,MODEL,SERIAL,TRAN -- "$target"
+printf '\nWARNING: all data on %s will be erased.\n' "$target"
+read -r -p 'Continue? [y/N] ' confirmation
+[[ "$confirmation" == y || "$confirmation" == Y ]] || die "cancelled; nothing was changed"
+
+dd if="$image" of="$target" bs=4M status=progress conv=fsync
+sync
+printf '\nUSB written successfully.\n'

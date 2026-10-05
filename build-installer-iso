@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+printf 'Building the serverless installer ISO.\n'
+
+nix build \
+  "path:$repo#nixosConfigurations.installer.config.system.build.isoImage" \
+  --out-link "$repo/result"
+
+printf '\nISO built at:\n'
+find "$repo/result/iso" -maxdepth 1 -type f -name '*.iso' -print

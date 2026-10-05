@@ -2,7 +2,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   imports = [
     ./disko.nix
     ./users.nix
@@ -28,7 +29,7 @@
 
   nyx = {
     desktop.enable = false;
-    displayManager = "ly";
+    displayManager = "none";
     hardware.fingerprint = false;
     network.tailscale.enable = true;
 
@@ -39,7 +40,8 @@
     services.immich.enable = true;
   };
 
-  nixpkgs.config.allowUnfreePredicate = pkg:
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
     builtins.elem (lib.getName pkg) [
       "rar"
       "steam-unwrapped"
@@ -52,6 +54,13 @@
   };
 
   powerManagement.cpuFreqGovernor = "performance";
+
+  /*
+    systemd.tmpfiles.rules = [
+      "d /etc/nixos 0755 baryon users -"
+    ];
+  */
+
   services = {
     irqbalance.enable = true;
     thermald.enable = true;

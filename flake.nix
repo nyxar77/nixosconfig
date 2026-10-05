@@ -113,6 +113,14 @@
         in
         {
           nixosConfigurations = {
+            installer = nixpkgs.lib.nixosSystem {
+              system = hostSystem;
+              modules = [ ./hosts/installer ];
+              specialArgs = {
+                inherit inputs hostNames;
+              };
+            };
+
             ${hostNames.workstation} = mkHost {
               name = hostNames.workstation;
               inherit pkgs;
@@ -128,6 +136,22 @@
             ${hostNames.server} = mkHost {
               name = hostNames.server;
               extraModules = [ inputs.disko.nixosModules.disko ];
+            };
+
+            serverless-bootstrap = mkHost {
+              name = hostNames.server;
+              extraModules = [
+                inputs.disko.nixosModules.disko
+                (
+                  { lib, ... }:
+                  {
+                    nyx.services.attic.enable = lib.mkForce false;
+                    nyx.services.immich.enable = lib.mkForce false;
+                    services.scx.enable = lib.mkForce false;
+                    security.sudo.wheelNeedsPassword = lib.mkForce false;
+                  }
+                )
+              ];
             };
           };
         };
