@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   services.openssh.settings = {
     PasswordAuthentication = false;
     KbdInteractiveAuthentication = false;
@@ -31,12 +31,8 @@
       ];
       # Mot de passe vide.
       # Attention: pas recommandé si la machine est accessible physiquement par d'autres.
-      /*
-         packages = with pkgs; [
-        firefox
-      ];
-      */
       hashedPassword = "";
     };
   };
+
 }
