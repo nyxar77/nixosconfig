@@ -3,7 +3,7 @@ keys:
   - &serverless age1rahl2wwkqqm3xr8w3cjwevmf9jv64dklezhq76urzp60drfgcymqv96vc9
 
 creation_rules:
-  - path_regex: secrets/serverless-code-forges$
+  - path_regex: secrets/serverless\.yaml$
     key_groups:
       - age:
           - *nixos

@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05"; # Stable
-    # unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     /*
       hyprland.url = "github:hyprwm/Hyprland";
       hyprland-plugins = {
@@ -102,7 +102,7 @@
                 ++ extraModules;
 
                 specialArgs = {
-                  inherit inputs hostNames;
+                  inherit inputs hostNames unstablePkgs;
                 }
                 // specialArgs;
               }
@@ -110,6 +110,7 @@
             );
 
           pkgs = mkPkgs hostSystem;
+          unstablePkgs = import inputs.unstable { system = hostSystem; };
         in
         {
           nixosConfigurations = {
